@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="React,Mobx,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="一、前言本文是笔者在看了 frontendmaster 的状态管理课程之后，对 mobx 进行的初步学习的总结。 二、Mobx 简介mobx 是社区内使用的较为常见的一种状态管理库，mobx 官网称其  通过透明的函数响应式编程(transparently applying functional reactive programming - TFRP)使得状态管理变得简单和可扩展  mobx 主要">
+<meta name="keywords" content="React,Mobx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mobx初探">
+<meta property="og:url" content="http://yoursite.com/2019/04/23/mobx初探/index.html">
+<meta property="og:site_name" content="Demian">
+<meta property="og:description" content="一、前言本文是笔者在看了 frontendmaster 的状态管理课程之后，对 mobx 进行的初步学习的总结。 二、Mobx 简介mobx 是社区内使用的较为常见的一种状态管理库，mobx 官网称其  通过透明的函数响应式编程(transparently applying functional reactive programming - TFRP)使得状态管理变得简单和可扩展  mobx 主要">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/4.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/5.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/6.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/7.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/8.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/9.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/10.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/11.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/12.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/23/mobx初探/13.png">
+<meta property="og:updated_time" content="2019-04-23T00:41:16.972Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mobx初探">
+<meta name="twitter:description" content="一、前言本文是笔者在看了 frontendmaster 的状态管理课程之后，对 mobx 进行的初步学习的总结。 二、Mobx 简介mobx 是社区内使用的较为常见的一种状态管理库，mobx 官网称其  通过透明的函数响应式编程(transparently applying functional reactive programming - TFRP)使得状态管理变得简单和可扩展  mobx 主要">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/23/mobx初探/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/04/23/mobx初探/">
+
+
+
+
+
+  <title>mobx初探 | Demian</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Demian</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/23/mobx初探/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="白马啸西风">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/avator.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Demian">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mobx初探</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-23T00:39:08+08:00">
+                2019-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>本文是笔者在看了 frontendmaster 的状态管理课程之后，对 mobx 进行的初步学习的总结。</p>
+<h2 id="二、Mobx-简介"><a href="#二、Mobx-简介" class="headerlink" title="二、Mobx 简介"></a>二、Mobx 简介</h2><p>mobx 是社区内使用的较为常见的一种状态管理库，mobx 官网称其</p>
+<blockquote>
+<p>通过透明的函数响应式编程(transparently applying functional reactive programming - TFRP)使得状态管理变得简单和可扩展</p>
+</blockquote>
+<p>mobx 主要有以下几个核心特性：</p>
+<ul>
+<li>Observable State（可观察状态）</li>
+<li>Computed Values（计算属性）</li>
+<li>Reactions（反应，完成页面渲染、日志打印）</li>
+<li>Actions（动作）</li>
+</ul>
+<p>以下介绍将结合部分 mobx 代码，代码地址： <a href="https://jsbin.com/demelo/19/edit?html,js,console,output" target="_blank" rel="noopener">示例代码</a></p>
+<a id="more"></a>
+<p>详细代码如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// html</span></span><br><span class="line">&lt;div id=<span class="string">"console"</span> /&gt;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// js</span></span><br><span class="line"><span class="keyword">const</span> &#123; computed, observable, autorun &#125; = mobx;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  @observable firstName;</span><br><span class="line">  @observable secondName;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>(firstName, secondName) &#123;</span><br><span class="line">    <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">    <span class="keyword">this</span>.secondName = secondName;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @computed <span class="keyword">get</span> fullName() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.secondName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> wdz = <span class="keyword">new</span> Person(<span class="string">'Demian'</span>, <span class="string">'Wang'</span>);</span><br><span class="line"><span class="keyword">const</span> greet = observable.box(<span class="string">'good morning! '</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> render = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">'console'</span>).innerText = greet + wdz.fullName;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 动态更新dom内容</span></span><br><span class="line">autorun(render);</span><br></pre></td></tr></table></figure>
+<p>此时网页 ui 为：</p>
+<p><img src="/2019/04/23/mobx初探/1.png" alt="1"></p>
+<h3 id="1-Computed-Values"><a href="#1-Computed-Values" class="headerlink" title="1.Computed Values"></a>1.Computed Values</h3><p>首先介绍一下计算属性。在上述代码中 fullName 就是计算属性。相信用过 vue 的对这个很熟悉。当我们在命令行手动修改 wdz 的 firstName 时，wdz 的 fullName 会自动更新</p>
+<p><img src="/2019/04/23/mobx初探/2.png" alt="2"></p>
+<p>此时网页 ui 也发生了实时的变化：</p>
+<p><img src="/2019/04/23/mobx初探/3.png" alt="3"></p>
+<p>可见，computed 属性可以响应 observable 属性的变化。</p>
+<p>值得一提的是，在 react 的 render 函数中，如果存在很多 props 的计算的话，可以使用 get 语法的形式将这部分逻辑抽离：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">get</span> fullName() &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.props.firstName + <span class="keyword">this</span>.props.secondName;</span><br><span class="line">&#125;</span><br><span class="line">render() &#123;</span><br><span class="line">  <span class="keyword">return</span> &lt;div&gt;&#123;this.fullName&#125;&lt;/div&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的 fullName 和可计算属性类似，依据传入的 props 属性动态变化。</p>
+<h3 id="2-Observable-State"><a href="#2-Observable-State" class="headerlink" title="2.Observable State"></a>2.Observable State</h3><p>通过在类属性前加上@observable，为该属性添加了可观察功能。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; observable &#125; <span class="keyword">from</span> <span class="string">'mobx'</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  @observable firstName;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>(firstName) &#123;</span><br><span class="line">    <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用装饰器语法很简洁的使得 name 拥有了可观察的功能。</p>
+<p>那么 Observable 有什么作用呢？</p>
+<p>见以下代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greet = observable.box(<span class="string">'good morning! '</span>);</span><br></pre></td></tr></table></figure>
+<p>我们为 greet 返回一个 observable 包装过的值，首先我们试着直接改变 greet 的值</p>
+<p><img src="/2019/04/23/mobx初探/4.png" alt="4"></p>
+<p>但是，此时网页 ui 没有实时变化：</p>
+<p><img src="/2019/04/23/mobx初探/5.png" alt="5"></p>
+<p>可见，原始类型在包装过之后，<strong>直接改变引用值不能触发页面动态更新</strong>，感兴趣的读者可以点击上面的链接打印出 greet 的属性，就能很直观的认识到 observable 的作用。</p>
+<p>以下是简化版的 observable：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单的observable</span></span><br><span class="line"><span class="keyword">const</span> observable = <span class="function"><span class="params">value</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    value,</span><br><span class="line">    <span class="keyword">get</span>() &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'get'</span>, <span class="keyword">this</span>.value);</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.value;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">set</span>(newValue) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'set'</span>, newValue);</span><br><span class="line">      <span class="comment">// 向全局通知该数据更新</span></span><br><span class="line">      report(<span class="keyword">this</span>.value, newValue);</span><br><span class="line">      <span class="keyword">this</span>.value = newValue;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// reactive代码</span></span><br><span class="line">eventEmitter.on(<span class="string">'report'</span>, (oldValue, newValue) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(oldValue, <span class="string">'===&gt;'</span>, newValue);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通知给全局</span></span><br><span class="line"><span class="keyword">const</span> report = <span class="function">(<span class="params">oldValue, newValue</span>) =&gt;</span> &#123;</span><br><span class="line">  eventEmitter.emit(<span class="string">'report'</span>, oldValue, newValue);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>主要是使用 value 值存储原始类型，使用 get 获取 value 值，使用 set 更新 value 值。值得注意的是，在更新数据以前，set 方法会根据一定的配置，选择是否向全局发送更新事件，相应的一些 computed 的属性会接收到该事件。</p>
+<h3 id="3-Reactions"><a href="#3-Reactions" class="headerlink" title="3.Reactions"></a>3.Reactions</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> render = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">'console'</span>).innerText = greet + wdz.fullName;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 动态更新dom内容</span></span><br><span class="line">autorun(render);</span><br></pre></td></tr></table></figure>
+<p>当 observable 数据变化后，页面会自动更新 ui。</p>
+<h2 id="三、mobx-实战-实现一个-todoList"><a href="#三、mobx-实战-实现一个-todoList" class="headerlink" title="三、mobx 实战-实现一个 todoList"></a>三、mobx 实战-实现一个 todoList</h2><p>注：由于 create-react-app 创建的项目默认不能使用装饰器语法，所以笔者暴力的 eject 并安装了相应的 babel 配置。</p>
+<p>以下是 todoList 的项目结构：</p>
+<p><img src="/2019/04/23/mobx初探/6.png" alt="6"></p>
+<p>最终实现效果：</p>
+<p><img src="/2019/04/23/mobx初探/7.png" alt="7"></p>
+<p>项目地址：<a href="https://github.com/Demian1996/todo/tree/mobx-todo" target="_blank" rel="noopener">todolist</a></p>
+<p>当我们使用 mobx 维护状态时，store 不像 redux 那样是全局唯一的，我们可以细粒度地维护一个个数据模型。在中小型的项目中，mobx 的 store 轻便简洁，使用起来很顺滑。</p>
+<p>项目中用到的 mobx 特性：</p>
+<h3 id="1-observable"><a href="#1-observable" class="headerlink" title="1.observable"></a>1.observable</h3><p>主要维护 todolist 的基本状态：待办列表 todolist、新建待办的内容 itemContent 和当前筛选类型 filterType</p>
+<p><img src="/2019/04/23/mobx初探/8.png" alt="8"></p>
+<h3 id="2-computed"><a href="#2-computed" class="headerlink" title="2.computed"></a>2.computed</h3><p>根据当前筛选器的类型，返回对应的 todoList。</p>
+<p><img src="/2019/04/23/mobx初探/9.png" alt="9"></p>
+<h3 id="3-reactions"><a href="#3-reactions" class="headerlink" title="3.reactions"></a>3.reactions</h3><p>筛选器状态变化后，响应式地打印出当前筛选器的状态。</p>
+<p><img src="/2019/04/23/mobx初探/10.png" alt="10"></p>
+<h3 id="4-actions"><a href="#4-actions" class="headerlink" title="4.actions"></a>4.actions</h3><p>点击筛选器后的状态切换和异步事件。这里需要使用 runInAction 包装异步函数，这样才可以完成响应式的更新数据。</p>
+<p><img src="/2019/04/23/mobx初探/11.png" alt="11"></p>
+<h2 id="四、Mobx-vs-Redux"><a href="#四、Mobx-vs-Redux" class="headerlink" title="四、Mobx vs Redux"></a>四、Mobx vs Redux</h2><p>两者都是优秀的状态管理工具，都可以帮助开发者完成业务开发。所以抛开业务场景谈论工具优劣是无意义的，笔者这里只是简单列出两者的区别。</p>
+<h3 id="修改数据"><a href="#修改数据" class="headerlink" title="修改数据"></a>修改数据</h3><p><img src="/2019/04/23/mobx初探/12.png" alt="12"></p>
+<h3 id="中间件"><a href="#中间件" class="headerlink" title="中间件"></a>中间件</h3><p><img src="/2019/04/23/mobx初探/13.png" alt="13"></p>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>笔者只是介绍了 mobx 的冰山一角，其作为一种响应式的状态管理库，在中小型项目中有着高效率的表现。响应式的写法、细粒度的 store 管理都体现了 mobx 的灵活性。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/React/" rel="tag"># React</a>
+          
+            <a href="/tags/Mobx/" rel="tag"># Mobx</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/24/React父组件和子组件解耦方案/" rel="next" title="React父组件和子组件解耦方案">
+                <i class="fa fa-chevron-left"></i> React父组件和子组件解耦方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/avator.jpg" alt="白马啸西风">
+          <p class="site-author-name" itemprop="name">白马啸西风</p>
+           
+              <p class="site-description motion-element" itemprop="description">银鞍照白马，飒沓如流星</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、前言"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Mobx-简介"><span class="nav-number">2.</span> <span class="nav-text">二、Mobx 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Computed-Values"><span class="nav-number">2.1.</span> <span class="nav-text">1.Computed Values</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Observable-State"><span class="nav-number">2.2.</span> <span class="nav-text">2.Observable State</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Reactions"><span class="nav-number">2.3.</span> <span class="nav-text">3.Reactions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、mobx-实战-实现一个-todoList"><span class="nav-number">3.</span> <span class="nav-text">三、mobx 实战-实现一个 todoList</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-observable"><span class="nav-number">3.1.</span> <span class="nav-text">1.observable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-computed"><span class="nav-number">3.2.</span> <span class="nav-text">2.computed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-reactions"><span class="nav-number">3.3.</span> <span class="nav-text">3.reactions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-actions"><span class="nav-number">3.4.</span> <span class="nav-text">4.actions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、Mobx-vs-Redux"><span class="nav-number">4.</span> <span class="nav-text">四、Mobx vs Redux</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改数据"><span class="nav-number">4.1.</span> <span class="nav-text">修改数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#中间件"><span class="nav-number">4.2.</span> <span class="nav-text">中间件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、总结"><span class="nav-number">5.</span> <span class="nav-text">五、总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">白马啸西风</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
