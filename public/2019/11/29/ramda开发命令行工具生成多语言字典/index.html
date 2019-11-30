@@ -51,20 +51,22 @@
   };
 </script>
 
-  <meta name="description" content="函数式编程留坑待填～～背景写该专题主要是为了梳理自己学习函数式以来收获的知识，用于回顾。并且可以作为后期组内分享的素材。 计划  写一个常见的函数式的集合  学习 Functional-Light JavaScript  学习 Hardcore Functional Programming in JavaScript  学习使用 Ramda  学习 Haskell">
-<meta name="keywords" content="FP,分享">
+  <meta name="description" content="github 地址：https://github.com/Demian1996/translate  介绍命令行工具 translate，给定中文字典，生成 google 翻译后的多语言文件 1translate -f zh-CN.json -l en/ja 通过该命令生成多语言文件">
+<meta name="keywords" content="ramda,函数式编程,命令行工具">
 <meta property="og:type" content="article">
-<meta property="og:title" content="函数式编程系列（一）总览">
-<meta property="og:url" content="http://yoursite.com/2019/03/10/函数式编程系列（一）总览/index.html">
+<meta property="og:title" content="ramda开发命令行工具生成多语言字典">
+<meta property="og:url" content="http://yoursite.com/2019/11/29/ramda开发命令行工具生成多语言字典/index.html">
 <meta property="og:site_name" content="Demian">
-<meta property="og:description" content="函数式编程留坑待填～～背景写该专题主要是为了梳理自己学习函数式以来收获的知识，用于回顾。并且可以作为后期组内分享的素材。 计划  写一个常见的函数式的集合  学习 Functional-Light JavaScript  学习 Hardcore Functional Programming in JavaScript  学习使用 Ramda  学习 Haskell">
+<meta property="og:description" content="github 地址：https://github.com/Demian1996/translate  介绍命令行工具 translate，给定中文字典，生成 google 翻译后的多语言文件 1translate -f zh-CN.json -l en/ja 通过该命令生成多语言文件">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-09T03:09:26.468Z">
+<meta property="og:image" content="http://yoursite.com/2019/11/29/ramda开发命令行工具生成多语言字典/1.png">
+<meta property="og:updated_time" content="2019-11-30T02:01:38.708Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="函数式编程系列（一）总览">
-<meta name="twitter:description" content="函数式编程留坑待填～～背景写该专题主要是为了梳理自己学习函数式以来收获的知识，用于回顾。并且可以作为后期组内分享的素材。 计划  写一个常见的函数式的集合  学习 Functional-Light JavaScript  学习 Hardcore Functional Programming in JavaScript  学习使用 Ramda  学习 Haskell">
+<meta name="twitter:title" content="ramda开发命令行工具生成多语言字典">
+<meta name="twitter:description" content="github 地址：https://github.com/Demian1996/translate  介绍命令行工具 translate，给定中文字典，生成 google 翻译后的多语言文件 1translate -f zh-CN.json -l en/ja 通过该命令生成多语言文件">
+<meta name="twitter:image" content="http://yoursite.com/2019/11/29/ramda开发命令行工具生成多语言字典/1.png">
 
-<link rel="canonical" href="http://yoursite.com/2019/03/10/函数式编程系列（一）总览/">
+<link rel="canonical" href="http://yoursite.com/2019/11/29/ramda开发命令行工具生成多语言字典/">
 
 
 <script id="page-configurations">
@@ -78,7 +80,7 @@
   };
 </script>
 
-  <title>函数式编程系列（一）总览 | Demian</title>
+  <title>ramda开发命令行工具生成多语言字典 | Demian</title>
   
 
 
@@ -182,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/10/函数式编程系列（一）总览/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/29/ramda开发命令行工具生成多语言字典/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -195,7 +197,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          函数式编程系列（一）总览
+          ramda开发命令行工具生成多语言字典
         </h1>
 
         <div class="post-meta">
@@ -205,14 +207,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-03-10 21:05:45" itemprop="dateCreated datePublished" datetime="2019-03-10T21:05:45+08:00">2019-03-10</time>
+              <time title="创建时间：2019-11-29 16:05:53" itemprop="dateCreated datePublished" datetime="2019-11-29T16:05:53+08:00">2019-11-29</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-11-09 11:09:26" itemprop="dateModified" datetime="2019-11-09T11:09:26+08:00">2019-11-09</time>
+                <time title="修改时间：2019-11-30 10:01:38" itemprop="dateModified" datetime="2019-11-30T10:01:38+08:00">2019-11-30</time>
               </span>
 
           
@@ -226,14 +228,33 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="函数式编程"><a href="#函数式编程" class="headerlink" title="函数式编程"></a>函数式编程</h1><h2 id="留坑待填～～"><a href="#留坑待填～～" class="headerlink" title="留坑待填～～"></a>留坑待填～～</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>写该专题主要是为了梳理自己学习函数式以来收获的知识，用于回顾。并且可以作为后期组内分享的素材。</p>
-<h3 id="计划"><a href="#计划" class="headerlink" title="计划"></a>计划</h3><ul>
-<li style="list-style: none"><input type="checkbox"> 写一个常见的函数式的集合</li>
-<li style="list-style: none"><input type="checkbox"> 学习 Functional-Light JavaScript</li>
-<li style="list-style: none"><input type="checkbox"> 学习 Hardcore Functional Programming in JavaScript</li>
-<li style="list-style: none"><input type="checkbox"> 学习使用 Ramda</li>
-<li style="list-style: none"><input type="checkbox"> 学习 Haskell</li>
+        <blockquote>
+<p>github 地址：<a href="https://github.com/Demian1996/translate" target="_blank" rel="noopener">https://github.com/Demian1996/translate</a></p>
+</blockquote>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>命令行工具 translate，给定中文字典，生成 google 翻译后的多语言文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">translate -f zh-CN.json -l en/ja</span><br></pre></td></tr></table></figure>
+<p>通过该命令生成多语言文件<br><a id="more"></a></p>
+<h2 id="模块依赖"><a href="#模块依赖" class="headerlink" title="模块依赖"></a>模块依赖</h2><ul>
+<li>命令行工具<code>commander</code></li>
+<li>请求库<code>request</code></li>
+<li>函数库<code>ramda</code></li>
 </ul>
+<h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><h4 id="目录总览"><a href="#目录总览" class="headerlink" title="目录总览"></a>目录总览</h4><p><img src="/2019/11/29/ramda开发命令行工具生成多语言字典/1.png" alt="1"></p>
+<p>bin 是业务逻辑处理文件</p>
+<p>package.json 配置依赖</p>
+<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><p>首先在<code>package.json</code>的文件中配置<code>bin</code>，指定文件路径和对应的命令名:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">"bin": &#123;</span><br><span class="line">  "translate": "./bin/index.js"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在 bin 文件夹下新建入口文件 index.js，在文件首行配置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br></pre></td></tr></table></figure>
+<p>这一行是指定使用 node 执行脚本文件</p>
+<p>然后执行命令<code>npm link</code>，就可以全局使用 translate 命令了。</p>
+<h4 id="参数解析"><a href="#参数解析" class="headerlink" title="参数解析"></a>参数解析</h4><p>使用模块 Commander 解析命令行参数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">commander.option(<span class="string">'-f --file &lt;filename&gt;'</span>, <span class="string">'translate file'</span>, callback);</span><br><span class="line">commander.option(<span class="string">'-l --languages [languages]'</span>, <span class="string">'languages'</span>, <span class="string">'en'</span>);</span><br><span class="line">commander.parse(process.argv);</span><br></pre></td></tr></table></figure>
+<p>通过<code>-f</code>指定中文字典文件，通过<code>-l</code>指定目标语言，默认翻译为英文。<code>callback</code>主要是判断文件是否存在若不存在则返回 null，存在则返回 json 对象。后续可以通过 commander.file 获取 json 对象。</p>
+<h4 id="流程处理"><a href="#流程处理" class="headerlink" title="流程处理"></a>流程处理</h4><p>业务逻辑如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> generateDictionary = R.pipe(getLanguageArray, fetchTranslateApi, mapTranslation, generateFile);</span><br><span class="line">generateDictionary();</span><br></pre></td></tr></table></figure>
+<p>即获取目标语言数组-&gt;爬取 google 翻译 api-&gt;从返回值中筛选出翻译值-&gt;生成目标语言的 json 文件。</p>
+<p>详细流程见源码</p>
 
     </div>
 
@@ -243,25 +264,23 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/FP/" rel="tag"># FP</a>
-              <a href="/tags/分享/" rel="tag"># 分享</a>
+              <a href="/tags/ramda/" rel="tag"># ramda</a>
+              <a href="/tags/函数式编程/" rel="tag"># 函数式编程</a>
+              <a href="/tags/命令行工具/" rel="tag"># 命令行工具</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/03/07/react中减少render臃肿的方法/" rel="next" title="react中减少render臃肿的方法">
-                  <i class="fa fa-chevron-left"></i> react中减少render臃肿的方法
+                <a href="/2019/04/23/mobx初探/" rel="next" title="mobx初探">
+                  <i class="fa fa-chevron-left"></i> mobx初探
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2019/03/24/React父组件和子组件解耦方案/" rel="prev" title="React父组件和子组件解耦方案">
-                  React父组件和子组件解耦方案 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -300,7 +319,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#函数式编程"><span class="nav-number">1.</span> <span class="nav-text">函数式编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#留坑待填～～"><span class="nav-number">1.1.</span> <span class="nav-text">留坑待填～～</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计划"><span class="nav-number">1.1.2.</span> <span class="nav-text">计划</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#模块依赖"><span class="nav-number">1.1.</span> <span class="nav-text">模块依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发"><span class="nav-number">1.2.</span> <span class="nav-text">开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#目录总览"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">目录总览</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命令"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参数解析"><span class="nav-number">1.2.0.3.</span> <span class="nav-text">参数解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流程处理"><span class="nav-number">1.2.0.4.</span> <span class="nav-text">流程处理</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
