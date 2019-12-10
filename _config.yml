@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Demian
+title: 假想国
 subtitle:
-description: 银鞍照白马，飒沓如流星
+description: 少年侠气，结交五都雄
 keywords:
 author: 白马啸西风
 language: zh-CN
@@ -13,7 +13,7 @@ timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com/
+url: http://demian1996.github.io/
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -81,3 +81,13 @@ deploy:
   type: git
   repository: https://github.com/Demian1996/Demian1996.github.io
   branch: master
+
+# rss阅读器配置
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  hub:
+  content:
+  content_limit:
+  content_limit_delim: ' '

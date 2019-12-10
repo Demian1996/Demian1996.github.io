@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
-  <link rel="alternate" href="/atom.xml" title="Demian" type="application/atom+xml">
+  <link rel="alternate" href="/atom.xml" title="假想国" type="application/atom+xml">
 
 <link rel="stylesheet" href="/css/main.css">
 
@@ -55,8 +55,8 @@
 <meta name="keywords" content="React">
 <meta property="og:type" content="article">
 <meta property="og:title" content="react中减少render臃肿的方法">
-<meta property="og:url" content="http://yoursite.com/2019/03/07/react中减少render臃肿的方法/index.html">
-<meta property="og:site_name" content="Demian">
+<meta property="og:url" content="http://demian1996.github.io/2019/03/07/react中减少render臃肿的方法/index.html">
+<meta property="og:site_name" content="假想国">
 <meta property="og:description" content="最近看了mobx的相关知识，对computed属性十分喜欢。 想起在日常的项目开发中，react经常需要在render函数的开始部分进行一些props属性的计算，再将计算值用于渲染。一般会有以下画面： 1234567class User extends Component &amp;#123;  render() &amp;#123;    const &amp;#123; firstName, secondName &amp;">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2019-11-09T03:09:26.462Z">
@@ -64,7 +64,7 @@
 <meta name="twitter:title" content="react中减少render臃肿的方法">
 <meta name="twitter:description" content="最近看了mobx的相关知识，对computed属性十分喜欢。 想起在日常的项目开发中，react经常需要在render函数的开始部分进行一些props属性的计算，再将计算值用于渲染。一般会有以下画面： 1234567class User extends Component &amp;#123;  render() &amp;#123;    const &amp;#123; firstName, secondName &amp;">
 
-<link rel="canonical" href="http://yoursite.com/2019/03/07/react中减少render臃肿的方法/">
+<link rel="canonical" href="http://demian1996.github.io/2019/03/07/react中减少render臃肿的方法/">
 
 
 <script id="page-configurations">
@@ -78,7 +78,7 @@
   };
 </script>
 
-  <title>react中减少render臃肿的方法 | Demian</title>
+  <title>react中减少render臃肿的方法 | 假想国</title>
   
 
 
@@ -122,7 +122,7 @@
     <div>
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Demian</span>
+        <span class="site-title">假想国</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -182,16 +182,16 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/07/react中减少render臃肿的方法/">
+    <link itemprop="mainEntityOfPage" href="http://demian1996.github.io/2019/03/07/react中减少render臃肿的方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="白马啸西风">
-      <meta itemprop="description" content="银鞍照白马，飒沓如流星">
+      <meta itemprop="description" content="少年侠气，结交五都雄">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Demian">
+      <meta itemprop="name" content="假想国">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -228,12 +228,12 @@
       
         <p>最近看了mobx的相关知识，对computed属性十分喜欢。</p>
 <p>想起在日常的项目开发中，react经常需要在render函数的开始部分进行一些props属性的计算，再将计算值用于渲染。一般会有以下画面：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">const</span> fullName = firstName + secondName;</span><br><span class="line">    <span class="keyword">return</span> &lt;div&gt;&#123;fullName&#125;&lt;/div&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">const</span> fullName = firstName + secondName;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;fullName&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>当业务逻辑复杂时可能会造成render函数十分的臃肿。也许我们会进行这样的优化：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  getFullName = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> firstName + secondName;</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> &lt;div&gt;&#123;this.getFullName()&#125;&lt;/div&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  getFullName = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> firstName + secondName;</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.getFullName()&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>但是我们实质上寻求的是一种computed的属性，将其封装成函数只是一种曲线救国的手段。<br>直到我在看frontend master的过程中，才发现原来可以使用class的get属性：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">get</span> fullName() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> firstName + secondName;</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> &lt;div&gt;&#123;this.fullName&#125;&lt;/div&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">get</span> fullName() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> firstName + secondName;</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.fullName&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>使用get属性实现computed的功能可以减少render函数的臃肿。</p>
 
     </div>
@@ -308,7 +308,7 @@
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="白马啸西风" src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">白马啸西风</p>
-  <div class="site-description" itemprop="description">银鞍照白马，飒沓如流星</div>
+  <div class="site-description" itemprop="description">少年侠气，结交五都雄</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">

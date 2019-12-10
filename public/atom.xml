@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>假想国</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://demian1996.github.io/"/>
+  <updated>2019-11-30T02:01:38.708Z</updated>
+  <id>http://demian1996.github.io/</id>
+  
+  <author>
+    <name>白马啸西风</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ramda开发命令行工具生成多语言字典</title>
+    <link href="http://demian1996.github.io/2019/11/29/ramda%E5%BC%80%E5%8F%91%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E7%94%9F%E6%88%90%E5%A4%9A%E8%AF%AD%E8%A8%80%E5%AD%97%E5%85%B8/"/>
+    <id>http://demian1996.github.io/2019/11/29/ramda%E5%BC%80%E5%8F%91%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E7%94%9F%E6%88%90%E5%A4%9A%E8%AF%AD%E8%A8%80%E5%AD%97%E5%85%B8/</id>
+    <published>2019-11-29T08:05:53.000Z</published>
+    <updated>2019-11-30T02:01:38.708Z</updated>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;github 地址：&lt;a href=&quot;https://github.com/Demian1996/translate&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://github.com/Demian1996/translate&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h1&gt;&lt;p&gt;命令行工具 translate，给定中文字典，生成 google 翻译后的多语言文件&lt;/p&gt;
+&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;translate -f zh-CN.json -l en/ja&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;通过该命令生成多语言文件&lt;br&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="ramda" scheme="http://demian1996.github.io/tags/ramda/"/>
+    
+      <category term="函数式编程" scheme="http://demian1996.github.io/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="命令行工具" scheme="http://demian1996.github.io/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mobx初探</title>
+    <link href="http://demian1996.github.io/2019/04/23/mobx%E5%88%9D%E6%8E%A2/"/>
+    <id>http://demian1996.github.io/2019/04/23/mobx%E5%88%9D%E6%8E%A2/</id>
+    <published>2019-04-22T16:39:08.000Z</published>
+    <updated>2019-11-09T03:09:26.413Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;一、前言&quot;&gt;&lt;a href=&quot;#一、前言&quot; class=&quot;headerlink&quot; title=&quot;一、前言&quot;&gt;&lt;/a&gt;一、前言&lt;/h2&gt;&lt;p&gt;本文是笔者在看了 frontendmaster 的状态管理课程之后，对 mobx 进行的初步学习的总结。&lt;/p&gt;
+&lt;h2 id=&quot;二、Mobx-简介&quot;&gt;&lt;a href=&quot;#二、Mobx-简介&quot; class=&quot;headerlink&quot; title=&quot;二、Mobx 简介&quot;&gt;&lt;/a&gt;二、Mobx 简介&lt;/h2&gt;&lt;p&gt;mobx 是社区内使用的较为常见的一种状态管理库，mobx 官网称其&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通过透明的函数响应式编程(transparently applying functional reactive programming - TFRP)使得状态管理变得简单和可扩展&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;mobx 主要有以下几个核心特性：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Observable State（可观察状态）&lt;/li&gt;
+&lt;li&gt;Computed Values（计算属性）&lt;/li&gt;
+&lt;li&gt;Reactions（反应，完成页面渲染、日志打印）&lt;/li&gt;
+&lt;li&gt;Actions（动作）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以下介绍将结合部分 mobx 代码，代码地址： &lt;a href=&quot;https://jsbin.com/demelo/19/edit?html,js,console,output&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;示例代码&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="React" scheme="http://demian1996.github.io/tags/React/"/>
+    
+      <category term="Mobx" scheme="http://demian1996.github.io/tags/Mobx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>React父组件和子组件解耦方案</title>
+    <link href="http://demian1996.github.io/2019/03/24/React%E7%88%B6%E7%BB%84%E4%BB%B6%E5%92%8C%E5%AD%90%E7%BB%84%E4%BB%B6%E8%A7%A3%E8%80%A6%E6%96%B9%E6%A1%88/"/>
+    <id>http://demian1996.github.io/2019/03/24/React%E7%88%B6%E7%BB%84%E4%BB%B6%E5%92%8C%E5%AD%90%E7%BB%84%E4%BB%B6%E8%A7%A3%E8%80%A6%E6%96%B9%E6%A1%88/</id>
+    <published>2019-03-24T14:01:12.000Z</published>
+    <updated>2019-11-09T03:09:26.405Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;业务中经常会遇到抽离组件的情况，那么父组件和子组件之间该怎么解耦呢？&lt;/p&gt;
+&lt;h2 id=&quot;案例&quot;&gt;&lt;a href=&quot;#案例&quot; class=&quot;headerlink&quot; title=&quot;案例&quot;&gt;&lt;/a&gt;案例&lt;/h2&gt;&lt;p&gt;比如实现一个 List 组件：&lt;/p&gt;
+&lt;figure class=&quot;highlight jsx&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; Item = &lt;span class=&quot;function&quot;&gt;(&lt;span class=&quot;params&quot;&gt;&amp;#123; text &amp;#125;&lt;/span&gt;) =&amp;gt;&lt;/span&gt; (&lt;span class=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&amp;#123;text&amp;#125;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;List&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;React&lt;/span&gt;.&lt;span class=&quot;title&quot;&gt;Component&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  state = &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    list: [&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  render() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;.state.list.map(&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;params&quot;&gt;x&lt;/span&gt; =&amp;gt;&lt;/span&gt; &amp;lt;Item text=&amp;#123;x&amp;#125; /&amp;gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;思考&quot;&gt;&lt;a href=&quot;#思考&quot; class=&quot;headerlink&quot; title=&quot;思考&quot;&gt;&lt;/a&gt;思考&lt;/h3&gt;&lt;p&gt;我们封装父组件经常会直接用到这种方法，但是如果该父组件是一个公共组件，那么当我们在外部引用它时，它对于我们而言其实是一个黑盒。父组件和子组件通过 list 牢牢的耦和在了一起。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="React" scheme="http://demian1996.github.io/tags/React/"/>
+    
+      <category term="Design Pattern" scheme="http://demian1996.github.io/tags/Design-Pattern/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>函数式编程系列（一）总览</title>
+    <link href="http://demian1996.github.io/2019/03/10/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89%E6%80%BB%E8%A7%88/"/>
+    <id>http://demian1996.github.io/2019/03/10/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89%E6%80%BB%E8%A7%88/</id>
+    <published>2019-03-10T13:05:45.000Z</published>
+    <updated>2019-11-09T03:09:26.468Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="FP" scheme="http://demian1996.github.io/tags/FP/"/>
+    
+      <category term="分享" scheme="http://demian1996.github.io/tags/%E5%88%86%E4%BA%AB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>react中减少render臃肿的方法</title>
+    <link href="http://demian1996.github.io/2019/03/07/react%E4%B8%AD%E5%87%8F%E5%B0%91render%E8%87%83%E8%82%BF%E7%9A%84%E6%96%B9%E6%B3%95/"/>
+    <id>http://demian1996.github.io/2019/03/07/react%E4%B8%AD%E5%87%8F%E5%B0%91render%E8%87%83%E8%82%BF%E7%9A%84%E6%96%B9%E6%B3%95/</id>
+    <published>2019-03-07T15:25:07.000Z</published>
+    <updated>2019-11-09T03:09:26.462Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近看了mobx的相关知识，对computed属性十分喜欢。&lt;/p&gt;
+&lt;p&gt;想起在日常的项目开发中，react经常需要在render函数的开始部分进行一些props属性的计算，再将计算值用于渲染。一般会有以下画面：&lt;/p&gt;
+&lt;figure class=&quot;highlight js&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Component&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  render() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; &amp;#123; firstName, secondName &amp;#125; = &lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;.props;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; fullName = firstName + secondName;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&amp;#123;fullName&amp;#125;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="React" scheme="http://demian1996.github.io/tags/React/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Create-react-app中使用装饰器语法</title>
+    <link href="http://demian1996.github.io/2019/03/01/Create-react-app%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%A3%85%E9%A5%B0%E5%99%A8%E8%AF%AD%E6%B3%95/"/>
+    <id>http://demian1996.github.io/2019/03/01/Create-react-app%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%A3%85%E9%A5%B0%E5%99%A8%E8%AF%AD%E6%B3%95/</id>
+    <published>2019-02-28T18:29:45.000Z</published>
+    <updated>2019-11-30T02:01:12.395Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;背景：&quot;&gt;&lt;a href=&quot;#背景：&quot; class=&quot;headerlink&quot; title=&quot;背景：&quot;&gt;&lt;/a&gt;背景：&lt;/h3&gt;&lt;p&gt;想要在 create-react-app 中使用 mobx，因为装饰器模式看起来简单，所以想让 create-react-app 支持装饰器语法。&lt;/p&gt;
+&lt;h3 id=&quot;项目搭建&quot;&gt;&lt;a href=&quot;#项目搭建&quot; class=&quot;headerlink&quot; title=&quot;项目搭建&quot;&gt;&lt;/a&gt;项目搭建&lt;/h3&gt;&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;create-react-app test-decorator&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;npm install -s mobx-react mobx&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;安装完毕后，若直接在 class 中使用 mobx 的@observer 语法&lt;/p&gt;
+&lt;figure class=&quot;highlight jsx&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; &amp;#123;@observer&amp;#125; &lt;span class=&quot;keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;mobx-react&#39;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;@observer&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Demo&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;此时会报编译错误&lt;br&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="React" scheme="http://demian1996.github.io/tags/React/"/>
+    
+      <category term="babel" scheme="http://demian1996.github.io/tags/babel/"/>
+    
+      <category term="mobx" scheme="http://demian1996.github.io/tags/mobx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hexo发布文章流程记录</title>
+    <link href="http://demian1996.github.io/2018/11/09/hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/"/>
+    <id>http://demian1996.github.io/2018/11/09/hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/</id>
+    <published>2018-11-09T02:19:27.000Z</published>
+    <updated>2019-11-09T03:09:26.409Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="hexo" scheme="http://demian1996.github.io/tags/hexo/"/>
+    
+  </entry>
+  
+</feed>
