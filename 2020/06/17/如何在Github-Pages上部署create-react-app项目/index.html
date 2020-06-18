@@ -55,16 +55,20 @@
 <meta name="keywords" content="github,站点">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何在Github Pages上部署create-react-app项目">
-<meta property="og:url" content="http://demian1996.github.io/2020/06/17/如何在Github-Page上部署create-react-app项目/index.html">
+<meta property="og:url" content="http://demian1996.github.io/2020/06/17/如何在Github-Pages上部署create-react-app项目/index.html">
 <meta property="og:site_name" content="假想国">
 <meta property="og:description" content="背景笔者经常会用 create-react-app 做些 demo 项目。其中某些打算维护的项目，笔者会将其放到 github 上。但是此时的问题往往是，README 不能够很好的阐述项目的全貌，此时就需要将项目部署到线上，达到在线预览的效果。而 Github Pages 服务就可以很好的满足这个效果。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-06-17T12:24:11.952Z">
+<meta property="og:image" content="http://demian1996.github.io/2020/06/17/如何在Github-Pages上部署create-react-app项目/1.png">
+<meta property="og:image" content="http://demian1996.github.io/2020/06/17/如何在Github-Pages上部署create-react-app项目/2.png">
+<meta property="og:image" content="http://demian1996.github.io/2020/06/17/如何在Github-Pages上部署create-react-app项目/3.png">
+<meta property="og:updated_time" content="2020-06-18T01:23:34.195Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在Github Pages上部署create-react-app项目">
 <meta name="twitter:description" content="背景笔者经常会用 create-react-app 做些 demo 项目。其中某些打算维护的项目，笔者会将其放到 github 上。但是此时的问题往往是，README 不能够很好的阐述项目的全貌，此时就需要将项目部署到线上，达到在线预览的效果。而 Github Pages 服务就可以很好的满足这个效果。">
+<meta name="twitter:image" content="http://demian1996.github.io/2020/06/17/如何在Github-Pages上部署create-react-app项目/1.png">
 
-<link rel="canonical" href="http://demian1996.github.io/2020/06/17/如何在Github-Page上部署create-react-app项目/">
+<link rel="canonical" href="http://demian1996.github.io/2020/06/17/如何在Github-Pages上部署create-react-app项目/">
 
 
 <script id="page-configurations">
@@ -182,7 +186,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://demian1996.github.io/2020/06/17/如何在Github-Page上部署create-react-app项目/">
+    <link itemprop="mainEntityOfPage" href="http://demian1996.github.io/2020/06/17/如何在Github-Pages上部署create-react-app项目/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -204,10 +208,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-06-17 20:00:09 / 修改时间：20:24:11" itemprop="dateCreated datePublished" datetime="2020-06-17T20:00:09+08:00">2020-06-17</time>
+              <time title="创建时间：2020-06-17 20:00:09" itemprop="dateCreated datePublished" datetime="2020-06-17T20:00:09+08:00">2020-06-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-18 09:23:34" itemprop="dateModified" datetime="2020-06-18T09:23:34+08:00">2020-06-18</time>
+              </span>
 
           
 
@@ -226,6 +236,10 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx create-react-app demo</span><br></pre></td></tr></table></figure>
 <p>然后在 package.json 中配置</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line">  "homepage": "./",</span><br><span class="line">  "scripts": &#123;</span><br><span class="line">    ...</span><br><span class="line">    "deploy": "gh-pages -d build"</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置 homepage 是为了后续打包时生成的路径为相对路径。<br>配置 deploy 是为了打完包后将所有静态文件部署到 github 的 gh-pages 分支上。</p>
+<blockquote>
+<p>Github Pages 默认只支持 master、gh-pages 两个分支和 master/docs 目录。</p>
+</blockquote>
 <h3 id="二、构建本地项目"><a href="#二、构建本地项目" class="headerlink" title="二、构建本地项目"></a>二、构建本地项目</h3><p>本文中默认用的构建脚手架是 create-react-app，生成的 package.json 中自带了构建命令：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
 <p>执行后，项目中会生成 build 目录</p>
@@ -237,6 +251,12 @@
 <h3 id="四、部署"><a href="#四、部署" class="headerlink" title="四、部署"></a>四、部署</h3><p>运行命令</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run deploy</span><br></pre></td></tr></table></figure>
 <p>完成后，github 上会生成 gh-pages 分支，该分支下包含 build 目录中所有文件</p>
+<p>此时打开 github，进入到具体项目中，具体如图所示</p>
+<p><img src="/2020/06/17/如何在Github-Pages上部署create-react-app项目/1.png" alt="1"></p>
+<p><img src="/2020/06/17/如何在Github-Pages上部署create-react-app项目/2.png" alt="2"></p>
+<p>然后，点击 settings，在 Github Pages 标题下，将 source 分支设置为 gh-pages。<br>如图所示</p>
+<p><img src="/2020/06/17/如何在Github-Pages上部署create-react-app项目/3.png" alt="3"></p>
+<p>然后访问 {username}.github.io/{项目名}，就可以在线预览项目了。</p>
 
     </div>
 
