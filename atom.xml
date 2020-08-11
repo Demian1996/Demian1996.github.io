@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://demian1996.github.io/"/>
-  <updated>2020-08-11T08:07:47.027Z</updated>
+  <updated>2020-08-11T08:40:12.265Z</updated>
   <id>http://demian1996.github.io/</id>
   
   <author>
@@ -21,17 +21,11 @@
     <link href="http://demian1996.github.io/2020/08/09/%E5%B0%81%E8%A3%85useModal%E5%A4%8D%E7%94%A8%E5%85%AC%E5%85%B1%E5%BC%B9%E7%AA%97%E7%BB%84%E4%BB%B6/"/>
     <id>http://demian1996.github.io/2020/08/09/%E5%B0%81%E8%A3%85useModal%E5%A4%8D%E7%94%A8%E5%85%AC%E5%85%B1%E5%BC%B9%E7%AA%97%E7%BB%84%E4%BB%B6/</id>
     <published>2020-08-09T12:00:09.000Z</published>
-    <updated>2020-08-11T08:07:47.027Z</updated>
+    <updated>2020-08-11T08:40:12.265Z</updated>
     
     <summary type="html">
     
-      
-      
-        
-        
-          
-        
-      
+      &lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;在常规的业务开发中，经常会用到 Modal 组件。当笔者在开发实际项目时，业务需求要求我在同一个页面分别使用 2-3 种弹窗。理论来说此时只需要使用一个 Modal 组件，定制不同内容即可。但是痛苦常常来源于生活，由于团队人员变动、公共组件管理不够规范、重复造轮子等各种原因，我们往往需要接入各种不同种类的弹窗组件，比如在下面的代码中，我使用的 ExitModal 和 DeleteModal 就出自不同人之手：&lt;/p&gt;
     
     </summary>
     
