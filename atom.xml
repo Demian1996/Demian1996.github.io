@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://demian1996.github.io/"/>
-  <updated>2020-06-18T01:23:34.195Z</updated>
+  <updated>2020-08-11T08:07:47.027Z</updated>
   <id>http://demian1996.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>封装useModal复用公共弹窗组件</title>
+    <link href="http://demian1996.github.io/2020/08/09/%E5%B0%81%E8%A3%85useModal%E5%A4%8D%E7%94%A8%E5%85%AC%E5%85%B1%E5%BC%B9%E7%AA%97%E7%BB%84%E4%BB%B6/"/>
+    <id>http://demian1996.github.io/2020/08/09/%E5%B0%81%E8%A3%85useModal%E5%A4%8D%E7%94%A8%E5%85%AC%E5%85%B1%E5%BC%B9%E7%AA%97%E7%BB%84%E4%BB%B6/</id>
+    <published>2020-08-09T12:00:09.000Z</published>
+    <updated>2020-08-11T08:07:47.027Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="React" scheme="http://demian1996.github.io/tags/React/"/>
+    
+      <category term="hook" scheme="http://demian1996.github.io/tags/hook/"/>
+    
+      <category term="组件设计" scheme="http://demian1996.github.io/tags/%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
   
   <entry>
     <title>如何在Github Pages上部署create-react-app项目</title>

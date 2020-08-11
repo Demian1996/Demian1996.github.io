@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.8.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="假想国" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="背景在常规的业务开发中，经常会用到 Modal 组件。当笔者在开发实际项目时，业务需求要求我在同一个页面分别使用 2-3 种弹窗。理论来说此时只需要使用一个 Modal 组件，定制不同内容即可。但是痛苦常常来源于生活，由于团队人员变动、公共组件管理不够规范、重复造轮子等各种原因，我们往往需要接入各种不同种类的弹窗组件，比如在下面的代码中，我使用的 ExitModal 和 DeleteModal 就">
+<meta name="keywords" content="React,hook,组件设计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="封装useModal复用公共弹窗组件">
+<meta property="og:url" content="http://demian1996.github.io/2020/08/09/封装useModal复用公共弹窗组件/index.html">
+<meta property="og:site_name" content="假想国">
+<meta property="og:description" content="背景在常规的业务开发中，经常会用到 Modal 组件。当笔者在开发实际项目时，业务需求要求我在同一个页面分别使用 2-3 种弹窗。理论来说此时只需要使用一个 Modal 组件，定制不同内容即可。但是痛苦常常来源于生活，由于团队人员变动、公共组件管理不够规范、重复造轮子等各种原因，我们往往需要接入各种不同种类的弹窗组件，比如在下面的代码中，我使用的 ExitModal 和 DeleteModal 就">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://demian1996.github.io/2020/08/09/封装useModal复用公共弹窗组件/1.png">
+<meta property="og:image" content="http://demian1996.github.io/2020/08/09/封装useModal复用公共弹窗组件/2.png">
+<meta property="og:updated_time" content="2020-08-11T08:07:47.027Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="封装useModal复用公共弹窗组件">
+<meta name="twitter:description" content="背景在常规的业务开发中，经常会用到 Modal 组件。当笔者在开发实际项目时，业务需求要求我在同一个页面分别使用 2-3 种弹窗。理论来说此时只需要使用一个 Modal 组件，定制不同内容即可。但是痛苦常常来源于生活，由于团队人员变动、公共组件管理不够规范、重复造轮子等各种原因，我们往往需要接入各种不同种类的弹窗组件，比如在下面的代码中，我使用的 ExitModal 和 DeleteModal 就">
+<meta name="twitter:image" content="http://demian1996.github.io/2020/08/09/封装useModal复用公共弹窗组件/1.png">
+
+<link rel="canonical" href="http://demian1996.github.io/2020/08/09/封装useModal复用公共弹窗组件/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>封装useModal复用公共弹窗组件 | 假想国</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">假想国</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://demian1996.github.io/2020/08/09/封装useModal复用公共弹窗组件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="白马啸西风">
+      <meta itemprop="description" content="少年侠气，结交五都雄">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="假想国">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          封装useModal复用公共弹窗组件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-09 20:00:09" itemprop="dateCreated datePublished" datetime="2020-08-09T20:00:09+08:00">2020-08-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-11 16:07:47" itemprop="dateModified" datetime="2020-08-11T16:07:47+08:00">2020-08-11</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在常规的业务开发中，经常会用到 Modal 组件。当笔者在开发实际项目时，业务需求要求我在同一个页面分别使用 2-3 种弹窗。理论来说此时只需要使用一个 Modal 组件，定制不同内容即可。但是痛苦常常来源于生活，由于团队人员变动、公共组件管理不够规范、重复造轮子等各种原因，我们往往需要接入各种不同种类的弹窗组件，比如在下面的代码中，我使用的 ExitModal 和 DeleteModal 就出自不同人之手：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> App = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [isShowExitModal, setIsShowExitModal] = useState(<span class="literal">false</span>);</span><br><span class="line">  <span class="keyword">const</span> [isShowDeleteModal, setIsShowDeleteModal] = useState(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;Button onClick=&#123;() =&gt; setIsShowExitModal(<span class="literal">true</span>)&#125;&gt;显示退出弹窗&lt;<span class="regexp">/Button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;Button onClick=&#123;() =&gt; setIsShowDeleteModal(true)&#125;&gt;显示删除弹窗&lt;/</span>Button&gt;</span><br><span class="line">      &lt;ExitModal</span><br><span class="line">        visible=&#123;isShowExitModal&#125;</span><br><span class="line">        onOk=&#123;() =&gt; &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="string">'成功退出'</span>);</span><br><span class="line">          setIsShowExitModal(<span class="literal">false</span>);</span><br><span class="line">        &#125;&#125;</span><br><span class="line">        onCancel=&#123;() =&gt; setIsShowExitModal(<span class="literal">false</span>)&#125;</span><br><span class="line">      /&gt;</span><br><span class="line">      &lt;DeleteModal</span><br><span class="line">        visible=&#123;isShowDeleteModal&#125;</span><br><span class="line">        onOk=&#123;() =&gt; <span class="built_in">console</span>.log(<span class="string">'成功删除'</span>)&#125;</span><br><span class="line">        onCancel=&#123;() =&gt; setIsShowDeleteModal(<span class="literal">false</span>)&#125;</span><br><span class="line">      /&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;;</span></span><br></pre></td></tr></table></figure>
+<p>该组件的状态依赖如下所示：</p>
+<p><img src="/2020/08/09/封装useModal复用公共弹窗组件/1.png" alt="1"></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>可以看到，在现有场景下，我们封装业务组件如果以这种模式处理，往往会面临以下问题：</p>
+<ul>
+<li>业务组件需要维护和直接依赖 Modal 组件的显隐状态，Modal 组件越多，冗余的 ui 状态越多</li>
+<li>如果 Modal 组件在封装时没有使用 createPortal 的 API，Modal 组件就会挂载到业务组件的真实 dom 中，影响业务组件的 dom 树</li>
+</ul>
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>首先我们期望的是在优化之后能够保证业务组件和 Modal 组件的状态脱钩，业务组件仅仅需要调用第三方提供的 show 方法调起弹窗，后续的操作都交给第三方处理。其次，我们期望在优化之后，无论 Modal 组件之前是怎么设计的，业务方调用时都会将其挂载到 body 下，不影响自身的 dom 结构。</p>
+<p>因此，笔者封装了 useModal 这个 hook，接受 Modal 组件，返回统一的 Modal 代理。由代理解决上面的两个问题。具体使用如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> App = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> exitModal = useModal(ExitModal);</span><br><span class="line">  <span class="keyword">const</span> deleteModal = useModal(DeleteModal);</span><br><span class="line">  <span class="keyword">const</span> onShowExitModal = useCallback(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    exitModal.show(&#123;</span><br><span class="line">      onOk: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'退出成功'</span>),</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;, [exitModal]);</span><br><span class="line">  <span class="keyword">const</span> onShowDeleteModal = useCallback(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    deleteModal.show(&#123;</span><br><span class="line">      onOk: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'删除成功'</span>),</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;, [deleteModal]);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;Button onClick=&#123;onShowExitModal&#125;&gt;显示退出弹窗&lt;<span class="regexp">/Button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;Button onClick=&#123;onShowDeleteModal&#125;&gt;显示删除弹窗&lt;/</span>Button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;;</span></span><br></pre></td></tr></table></figure>
+<p>此时，业务组件只需要依赖不同 modal 实例的代理，调用代理的 show 方法调起弹窗，不需要手动修改 visible 状态和在 renderTree 中插入 Modal 组件。</p>
+<h2 id="UseModal-详解"><a href="#UseModal-详解" class="headerlink" title="UseModal 详解"></a>UseModal 详解</h2><p>使用 useModal 后的 uml 图如下所示：</p>
+<p><img src="/2020/08/09/封装useModal复用公共弹窗组件/2.png" alt="2"></p>
+<p>useModal 接受实现了 Modal 接口的 React 组件，然后返回一个代理，该代理提供了 show 和 destroy 方法。窗口的 ui 状态和组件挂载逻辑交由代理控制，业务组件只需要知道代理的接口，即可实现窗口管理。</p>
+<p>下面介绍一下 useModal 实现 show 和 destroy 的基本原理：</p>
+<p>useModal 会维护具体的窗口实例的 visible 状态和真实的 Modal 组件，在业务调用 show 方法时，useModal 会调用 ReactDOM 的 render 方法将 Modal 组件挂载到 body 的 dom 下，在业务调用 destroy 方法是 ReactDOM 的 unmountComponentAtNode 方法卸载状态。<br>具体逻辑如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> unmount = useCallback(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> result = ReactDOM.unmountComponentAtNode(mountNode);</span><br><span class="line">  <span class="keyword">if</span> (result &amp;&amp; mountNode.parentNode) &#123;</span><br><span class="line">    mountNode.parentNode.removeChild(mountNode);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, [mountNode]);</span><br><span class="line"><span class="keyword">const</span> render = useCallback(</span><br><span class="line">  (modalProps: IModalProps) =&gt; &#123;</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(mountNode);</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      ReactDOM.render(<span class="xml"><span class="tag">&lt;<span class="name">Modal</span> &#123;<span class="attr">...modalProps</span>&#125;&gt;</span><span class="tag">&lt;/<span class="name">Modal</span>&gt;</span></span>, mountNode);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">  [mountNode]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h2 id="进一步思考"><a href="#进一步思考" class="headerlink" title="进一步思考"></a>进一步思考</h2><p>当前的 useModal 很好的实现了状态解耦，但是可以看到它给所有 Modal 组件增加了一层约束，即所有弹窗组件都要满足 Modal 这一接口。</p>
+<p>实际业务中，可能会遇到 Modal 组件不符合这一接口的，此时我们可以通过进一步实现 ModalAdapter 等方式解决问题。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/hook/" rel="tag"># hook</a>
+              <a href="/tags/组件设计/" rel="tag"># 组件设计</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/06/17/如何在Github-Pages上部署create-react-app项目/" rel="next" title="如何在Github Pages上部署create-react-app项目">
+                  <i class="fa fa-chevron-left"></i> 如何在Github Pages上部署create-react-app项目
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化"><span class="nav-number">3.</span> <span class="nav-text">优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UseModal-详解"><span class="nav-number">4.</span> <span class="nav-text">UseModal 详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进一步思考"><span class="nav-number">5.</span> <span class="nav-text">进一步思考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="白马啸西风" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">白马啸西风</p>
+  <div class="site-description" itemprop="description">少年侠气，结交五都雄</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Demian1996" title="GitHub &rarr; https://github.com/Demian1996" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1303465909@qq.com" title="E-Mail &rarr; mailto:1303465909@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">白马啸西风</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
