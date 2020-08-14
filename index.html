@@ -180,6 +180,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://demian1996.github.io/2020/08/14/配置项目ts和hook的eslint约束/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="白马啸西风">
+      <meta itemprop="description" content="少年侠气，结交五都雄">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="假想国">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/14/配置项目ts和hook的eslint约束/" class="post-title-link" itemprop="url">配置项目ts和hook的eslint约束</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-08-14 09:15:14 / 修改时间：09:25:06" itemprop="dateCreated datePublished" datetime="2020-08-14T09:15:14+08:00">2020-08-14</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。</p>
+<p>鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见<img src="https://github.com/AlloyTeam/eslint-config-alloy" alt="eslint-config-alloy"></p>
+<h2 id="第一步：安装-更新-Vscode-插件-Eslint"><a href="#第一步：安装-更新-Vscode-插件-Eslint" class="headerlink" title="第一步：安装/更新 Vscode 插件 Eslint"></a>第一步：安装/更新 Vscode 插件 Eslint</h2><p>vscode 中更新 Eslint 插件到最新版，保证对 typescript-eslint 的支持。</p>
+<p><img src="/2020/08/14/配置项目ts和hook的eslint约束/1.png" alt="1"></p>
+<h2 id="第二步：安装-Eslint-config-alloy"><a href="#第二步：安装-Eslint-config-alloy" class="headerlink" title="第二步：安装 Eslint-config-alloy"></a>第二步：安装 Eslint-config-alloy</h2><p>AlloyTeam ESLint：是一套先进的适用于 React/Vue/Typescript 项目的 ESLint 配置规范，而且也是配置个性化 ESLint 规则的最佳参考。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev eslint typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-config-alloy</span><br></pre></td></tr></table></figure>
+<p>安装完毕后，在.eslintrc.js 文件中新增配置如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  ...</span><br><span class="line">  extends: [<span class="string">'alloy'</span>, <span class="string">'alloy/react'</span>, <span class="string">'alloy/typescript'</span>],</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>此时项目已经支持对 ts 的 eslint 限制， 可以通过新建一个 index.tsx，在其中新建变量 var，此时 eslint 会进行报错：</p>
+<p><img src="/2020/08/14/配置项目ts和hook的eslint约束/2.png" alt="2"></p>
+<h2 id="第三步：安装-hook-规范"><a href="#第三步：安装-hook-规范" class="headerlink" title="第三步：安装 hook 规范"></a>第三步：安装 hook 规范</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev eslint-plugin-react-hooks</span><br></pre></td></tr></table></figure>
+<p>安装完毕后，在.eslintrc.js 文件中新增</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">extends: [</span><br><span class="line">    ...,</span><br><span class="line">    <span class="string">'plugin:react-hooks/recommended'</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>这里我们使用的是 plugin 提供的推荐配置，想要自定义配置可自行参照官方文档，在 rules 中进行配置。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://demian1996.github.io/2020/08/09/封装useModal复用公共弹窗组件/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -896,14 +968,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

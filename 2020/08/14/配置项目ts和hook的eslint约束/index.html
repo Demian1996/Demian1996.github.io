@@ -51,20 +51,24 @@
   };
 </script>
 
-  <meta name="description" content="新建文章 1hexo new post &quot;title&quot; 生成静态网页 1hexo g 本地预览 1hexo s 同步至 github 服务器 1hexo d">
-<meta name="keywords" content="hexo">
+  <meta name="description" content="背景teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。 鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址">
+<meta name="keywords" content="Eslint,typescript,alloy">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hexo发布文章流程记录">
-<meta property="og:url" content="http://demian1996.github.io/2018/11/09/hexo发布文章流程记录/index.html">
+<meta property="og:title" content="配置项目ts和hook的eslint约束">
+<meta property="og:url" content="http://demian1996.github.io/2020/08/14/配置项目ts和hook的eslint约束/index.html">
 <meta property="og:site_name" content="假想国">
-<meta property="og:description" content="新建文章 1hexo new post &quot;title&quot; 生成静态网页 1hexo g 本地预览 1hexo s 同步至 github 服务器 1hexo d">
+<meta property="og:description" content="背景teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。 鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-06-13T02:54:10.473Z">
+<meta property="og:image" content="https://github.com/AlloyTeam/eslint-config-alloy">
+<meta property="og:image" content="http://demian1996.github.io/2020/08/14/配置项目ts和hook的eslint约束/1.png">
+<meta property="og:image" content="http://demian1996.github.io/2020/08/14/配置项目ts和hook的eslint约束/2.png">
+<meta property="og:updated_time" content="2020-08-14T01:25:06.416Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hexo发布文章流程记录">
-<meta name="twitter:description" content="新建文章 1hexo new post &quot;title&quot; 生成静态网页 1hexo g 本地预览 1hexo s 同步至 github 服务器 1hexo d">
+<meta name="twitter:title" content="配置项目ts和hook的eslint约束">
+<meta name="twitter:description" content="背景teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。 鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址">
+<meta name="twitter:image" content="https://github.com/AlloyTeam/eslint-config-alloy">
 
-<link rel="canonical" href="http://demian1996.github.io/2018/11/09/hexo发布文章流程记录/">
+<link rel="canonical" href="http://demian1996.github.io/2020/08/14/配置项目ts和hook的eslint约束/">
 
 
 <script id="page-configurations">
@@ -78,7 +82,7 @@
   };
 </script>
 
-  <title>hexo发布文章流程记录 | 假想国</title>
+  <title>配置项目ts和hook的eslint约束 | 假想国</title>
   
 
 
@@ -182,7 +186,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://demian1996.github.io/2018/11/09/hexo发布文章流程记录/">
+    <link itemprop="mainEntityOfPage" href="http://demian1996.github.io/2020/08/14/配置项目ts和hook的eslint约束/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -195,7 +199,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          hexo发布文章流程记录
+          配置项目ts和hook的eslint约束
         </h1>
 
         <div class="post-meta">
@@ -204,16 +208,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2018-11-09 10:19:27" itemprop="dateCreated datePublished" datetime="2018-11-09T10:19:27+08:00">2018-11-09</time>
+              <time title="创建时间：2020-08-14 09:15:14 / 修改时间：09:25:06" itemprop="dateCreated datePublished" datetime="2020-08-14T09:15:14+08:00">2020-08-14</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-13 10:54:10" itemprop="dateModified" datetime="2020-06-13T10:54:10+08:00">2020-06-13</time>
-              </span>
 
           
 
@@ -226,14 +224,20 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>新建文章</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new post "title"</span><br></pre></td></tr></table></figure>
-<p>生成静态网页</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure>
-<p>本地预览</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-<p>同步至 github 服务器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。</p>
+<p>鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见<img src="https://github.com/AlloyTeam/eslint-config-alloy" alt="eslint-config-alloy"></p>
+<h2 id="第一步：安装-更新-Vscode-插件-Eslint"><a href="#第一步：安装-更新-Vscode-插件-Eslint" class="headerlink" title="第一步：安装/更新 Vscode 插件 Eslint"></a>第一步：安装/更新 Vscode 插件 Eslint</h2><p>vscode 中更新 Eslint 插件到最新版，保证对 typescript-eslint 的支持。</p>
+<p><img src="/2020/08/14/配置项目ts和hook的eslint约束/1.png" alt="1"></p>
+<h2 id="第二步：安装-Eslint-config-alloy"><a href="#第二步：安装-Eslint-config-alloy" class="headerlink" title="第二步：安装 Eslint-config-alloy"></a>第二步：安装 Eslint-config-alloy</h2><p>AlloyTeam ESLint：是一套先进的适用于 React/Vue/Typescript 项目的 ESLint 配置规范，而且也是配置个性化 ESLint 规则的最佳参考。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev eslint typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-config-alloy</span><br></pre></td></tr></table></figure>
+<p>安装完毕后，在.eslintrc.js 文件中新增配置如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  ...</span><br><span class="line">  extends: [<span class="string">'alloy'</span>, <span class="string">'alloy/react'</span>, <span class="string">'alloy/typescript'</span>],</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>此时项目已经支持对 ts 的 eslint 限制， 可以通过新建一个 index.tsx，在其中新建变量 var，此时 eslint 会进行报错：</p>
+<p><img src="/2020/08/14/配置项目ts和hook的eslint约束/2.png" alt="2"></p>
+<h2 id="第三步：安装-hook-规范"><a href="#第三步：安装-hook-规范" class="headerlink" title="第三步：安装 hook 规范"></a>第三步：安装 hook 规范</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev eslint-plugin-react-hooks</span><br></pre></td></tr></table></figure>
+<p>安装完毕后，在.eslintrc.js 文件中新增</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">extends: [</span><br><span class="line">    ...,</span><br><span class="line">    <span class="string">'plugin:react-hooks/recommended'</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>这里我们使用的是 plugin 提供的推荐配置，想要自定义配置可自行参照官方文档，在 rules 中进行配置。</p>
 
     </div>
 
@@ -243,21 +247,23 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/hexo/" rel="tag"># hexo</a>
+              <a href="/tags/Eslint/" rel="tag"># Eslint</a>
+              <a href="/tags/typescript/" rel="tag"># typescript</a>
+              <a href="/tags/alloy/" rel="tag"># alloy</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
+                <a href="/2020/08/09/封装useModal复用公共弹窗组件/" rel="next" title="封装useModal复用公共弹窗组件">
+                  <i class="fa fa-chevron-left"></i> 封装useModal复用公共弹窗组件
+                </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2019/03/01/Create-react-app中使用装饰器语法/" rel="prev" title="Create-react-app中使用装饰器语法">
-                  Create-react-app中使用装饰器语法 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -296,6 +302,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步：安装-更新-Vscode-插件-Eslint"><span class="nav-number">2.</span> <span class="nav-text">第一步：安装/更新 Vscode 插件 Eslint</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步：安装-Eslint-config-alloy"><span class="nav-number">3.</span> <span class="nav-text">第二步：安装 Eslint-config-alloy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三步：安装-hook-规范"><span class="nav-number">4.</span> <span class="nav-text">第三步：安装 hook 规范</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
