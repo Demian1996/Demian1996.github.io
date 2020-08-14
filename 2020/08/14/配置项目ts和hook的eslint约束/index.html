@@ -59,14 +59,13 @@
 <meta property="og:site_name" content="假想国">
 <meta property="og:description" content="背景teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。 鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://github.com/AlloyTeam/eslint-config-alloy">
 <meta property="og:image" content="http://demian1996.github.io/2020/08/14/配置项目ts和hook的eslint约束/1.png">
 <meta property="og:image" content="http://demian1996.github.io/2020/08/14/配置项目ts和hook的eslint约束/2.png">
-<meta property="og:updated_time" content="2020-08-14T01:25:06.416Z">
+<meta property="og:updated_time" content="2020-08-14T01:29:16.616Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="配置项目ts和hook的eslint约束">
 <meta name="twitter:description" content="背景teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。 鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址">
-<meta name="twitter:image" content="https://github.com/AlloyTeam/eslint-config-alloy">
+<meta name="twitter:image" content="http://demian1996.github.io/2020/08/14/配置项目ts和hook的eslint约束/1.png">
 
 <link rel="canonical" href="http://demian1996.github.io/2020/08/14/配置项目ts和hook的eslint约束/">
 
@@ -210,7 +209,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-08-14 09:15:14 / 修改时间：09:25:06" itemprop="dateCreated datePublished" datetime="2020-08-14T09:15:14+08:00">2020-08-14</time>
+              <time title="创建时间：2020-08-14 09:15:14 / 修改时间：09:29:16" itemprop="dateCreated datePublished" datetime="2020-08-14T09:15:14+08:00">2020-08-14</time>
             </span>
 
           
@@ -225,7 +224,8 @@
 
       
         <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。</p>
-<p>鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见<img src="https://github.com/AlloyTeam/eslint-config-alloy" alt="eslint-config-alloy"></p>
+<p>鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见<a href="https://github.com/AlloyTeam/eslint-config-alloy" target="_blank" rel="noopener">eslint-config-alloy</a></p>
+<a id="more"></a>
 <h2 id="第一步：安装-更新-Vscode-插件-Eslint"><a href="#第一步：安装-更新-Vscode-插件-Eslint" class="headerlink" title="第一步：安装/更新 Vscode 插件 Eslint"></a>第一步：安装/更新 Vscode 插件 Eslint</h2><p>vscode 中更新 Eslint 插件到最新版，保证对 typescript-eslint 的支持。</p>
 <p><img src="/2020/08/14/配置项目ts和hook的eslint约束/1.png" alt="1"></p>
 <h2 id="第二步：安装-Eslint-config-alloy"><a href="#第二步：安装-Eslint-config-alloy" class="headerlink" title="第二步：安装 Eslint-config-alloy"></a>第二步：安装 Eslint-config-alloy</h2><p>AlloyTeam ESLint：是一套先进的适用于 React/Vue/Typescript 项目的 ESLint 配置规范，而且也是配置个性化 ESLint 规则的最佳参考。</p>
