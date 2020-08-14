@@ -11,7 +11,9 @@ tags:
 
 teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。
 
-鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见![eslint-config-alloy](https://github.com/AlloyTeam/eslint-config-alloy)
+鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见[eslint-config-alloy](https://github.com/AlloyTeam/eslint-config-alloy)
+
+<!--more-->
 
 ## 第一步：安装/更新 Vscode 插件 Eslint
 
