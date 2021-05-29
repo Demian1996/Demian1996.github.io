@@ -79,7 +79,7 @@ theme: butterfly
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: https://github.com/Demian1996/Demian1996.github.io
+  repository: git@github.com:Demian1996/Demian1996.github.io.git
   branch: master
 
 # rss阅读器配置
