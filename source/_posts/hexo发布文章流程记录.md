@@ -1,8 +1,11 @@
 ---
 title: hexo发布文章流程记录
 date: 2018-11-09 10:19:27
+categories:
+  - 其他
 tags:
-  - hexo
+  - Hexo
+cover: /2018/11/09/hexo发布文章流程记录/index.png
 ---
 
 新建文章

@@ -1,10 +1,14 @@
 ---
 title: 封装useModal复用公共弹窗组件
 date: 2020-08-09 20:00:09
+categories:
+  - 前端
+  - 设计
 tags:
   - React
-  - hook
+  - React Hook
   - 组件设计
+cover: /2020/08/09/封装useModal复用公共弹窗组件/index.png
 ---
 
 ## 背景

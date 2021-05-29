@@ -1,10 +1,15 @@
 ---
 title: Create-react-app中使用装饰器语法
 date: 2019-03-01 02:29:45
+categories:
+  - 前端
+  - 其他
 tags:
   - React
-  - babel
-  - mobx
+  - Babel
+  - Mobx
+  - 装饰器
+cover: /2019/03/01/Create-react-app中使用装饰器语法/index.png
 ---
 
 ### 背景：

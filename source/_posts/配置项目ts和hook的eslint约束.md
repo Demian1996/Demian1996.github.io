@@ -1,10 +1,14 @@
 ---
 title: 配置项目ts和hook的eslint约束
 date: 2020-08-14 09:15:14
+categories:
+  - 前端
+  - 工程化
 tags:
   - Eslint
-  - typescript
-  - alloy
+  - Typescript
+  - Alloy
+cover: /2020/08/14/配置项目ts和hook的eslint约束/index.png
 ---
 
 ## 背景

@@ -1,10 +1,14 @@
 ---
 title: ramda开发命令行工具生成多语言字典
 date: 2019-11-29 16:05:53
+categories:
+  - 前端
+  - 工具开发
 tags:
-  - ramda
+  - Ramda
   - 函数式编程
   - 命令行工具
+cover: /2019/11/29/ramda开发命令行工具生成多语言字典/index.png
 ---
 
 > github 地址：https://github.com/Demian1996/translate

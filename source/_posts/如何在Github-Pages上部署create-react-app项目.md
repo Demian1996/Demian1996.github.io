@@ -1,9 +1,12 @@
 ---
 title: 如何在Github Pages上部署create-react-app项目
 date: 2020-06-17 20:00:09
+categories:
+  - 前端
+  - 工程化
 tags:
-  - github
-  - 站点
+  - Github
+cover: /2020/06/17/如何在Github-Pages上部署create-react-app项目/index.png
 ---
 
 ## 背景

@@ -1,9 +1,13 @@
 ---
 title: React父组件和子组件解耦方案
 date: 2019-03-24 22:01:12
+categories:
+  - 前端
+  - 设计
 tags:
   - React
-  - Design Pattern
+  - 组件设计
+cover: /2019/03/24/React父组件和子组件解耦方案/index.png
 ---
 
 ## 背景

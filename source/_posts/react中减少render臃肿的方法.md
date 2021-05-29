@@ -1,8 +1,12 @@
 ---
 title: react中减少render臃肿的方法
 date: 2019-03-07 23:25:07
+categories:
+  - 前端
+  - 设计
 tags:
   - React
+cover: /2019/03/07/react中减少render臃肿的方法/index.png
 ---
 
 最近看了mobx的相关知识，对computed属性十分喜欢。

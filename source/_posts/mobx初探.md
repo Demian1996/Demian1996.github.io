@@ -1,9 +1,13 @@
 ---
 title: mobx初探
 date: 2019-04-23 00:39:08
+categories:
+  - 前端
+  - 状态管理
 tags:
   - React
   - Mobx
+cover: /2019/04/23/mobx初探/index.png
 ---
 
 ## 一、前言

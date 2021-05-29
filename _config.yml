@@ -7,7 +7,7 @@ title: 假想国
 subtitle:
 description: 少年侠气，交结五都雄
 keywords:
-author: 阿登
+author: 白衣卿相
 language: zh-CN
 timezone: Asia/Shanghai
 
@@ -73,7 +73,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next
+theme: butterfly
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -91,3 +91,10 @@ feed:
   content:
   content_limit:
   content_limit_delim: ' '
+
+# 搜索引擎配置
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
