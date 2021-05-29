@@ -8,7 +8,7 @@
 
 menu:
   首页: / || fas fa-home
-  文章|| fa fa-book:  
+  文章|| fa fa-book:
     时间轴: /archives/ || fas fa-archive
     标签: /tags/ || fas fa-tags
     分类: /categories/ || fas fa-folder-open
@@ -91,7 +91,7 @@ avatar:
   effect: false
 
 # Disable all banner image
-disable_top_img: true
+disable_top_img: false
 
 # The banner image of home page
 index_img:
@@ -265,7 +265,7 @@ comments:
   # Up to two comments system, the first will be shown as default
   # Choose: Disqus/Disqusjs/Livere/Gitalk/Valine/Waline/Utterances/Facebook Comments/Twikoo
   use:
-  - Gitalk
+    - Gitalk
   # - Disqus
   text: true # Display the comment name next to the button
   # lazyload: The comment system will be load when comment element enters the browser's viewport.
@@ -421,8 +421,7 @@ footer:
 
 # Baidu Analytics
 # https://tongji.baidu.com/web/welcome/login
-baidu_analytics: "b8cfb9edb93ef89e5dd61b1282dba367"
-
+baidu_analytics: 'b8cfb9edb93ef89e5dd61b1282dba367'
 
 # Google Analytics
 # https://analytics.google.com/analytics/web/
@@ -510,7 +509,7 @@ tag_ui: # 留空或 index
 background:
 
 # Footer Background
-footer_bg: 
+footer_bg:
 
 # the position of bottom right button/default unit: px (右下角按鈕距離底部的距離/默認單位為px)
 rightside-bottom:
@@ -613,7 +612,7 @@ subtitle:
   # Typewriter Effect (打字效果)
   effect: true
   # loop (循環打字)
-  loop: false
+  loop: true
   # source調用第三方服務
   # source: false 關閉調用
   # source: 1  調用搏天api的隨機語錄（簡體）
@@ -621,12 +620,27 @@ subtitle:
   # source: 3  調用一句網（簡體）
   # source: 4  調用今日詩詞（簡體）
   # subtitle 會先顯示 source , 再顯示 sub 的內容
-  source: 4
+  source: false
   # 如果有英文逗號' , ',請使用轉義字元 &#44;
   # 如果有英文雙引號' " ',請使用轉義字元 &quot;
   # 開頭不允許轉義字元，如需要，請把整個句子用雙引號包住
   # 如果關閉打字效果，subtitle只會顯示sub的第一行文字
   sub:
+    - 最是人间留不住， 朱颜辞镜花辞树。
+    - 辛苦最怜天上月，一夕如环，夕夕都成玦。
+    - 雨横风狂三月暮，门掩黄昏，无计留春住。
+    - 昨夜西风凋碧树，独上高楼，望尽天涯路。
+    - 我是人间惆怅客，知君何事泪纵横。
+    - 沧海横流，方显英雄本色。
+    - 此去经年，应是良辰好景虚设。便纵有千种风情，更与何人说？
+    - 拣尽寒枝不肯栖，寂寞沙洲冷。
+    - 零落成泥碾作尘，只有香如故。
+    - 我见青山多妩媚，料青山见我应如是。
+    - 东风夜放花千树，更吹落，星如雨。
+    - 七八个星天外，两三点雨山前。
+    - 疏影横斜水清浅，暗香浮动月黄昏。
+    - 醉后不知天在水，满船清梦压星河。
+    - 君不见黄河之水天上来，奔流到海不复回。君不见高堂明镜悲白发，朝如青丝暮成雪。
 
 # Loading Animation (加載動畫)
 preloader: false
