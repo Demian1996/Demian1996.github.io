@@ -1,0 +1,13 @@
+class:
+  class_name: 😃 友情链接
+  link_list:
+    1:
+      name: 阿宽的博客
+      link: https://juejin.cn/user/1838039171075352
+      avatar: https://sf1-ttcdn-tos.pstatp.com/img/user-avatar/b676f342b3bf1ab47d9cedeb1bbc2d2e~300x300.image
+      descr: 就职CVTE，热爱技术，投身开源组织建设
+    2:
+      name: 土拨鼠Team
+      link: https://juejin.cn/team/6948219916164022279/posts
+      avatar: https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/29cef67ccdb54299a7cdf4a2cbd58608~tplv-k3u1fbpfcp-no-mark:0:0:480:480.awebp
+      descr: 土拨鼠前端的技术实践分享
