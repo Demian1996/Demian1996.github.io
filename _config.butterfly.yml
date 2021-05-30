@@ -83,11 +83,11 @@ katex:
 # --------------------------------------
 
 # Favicon（網站圖標）
-favicon: /common/favicon.jpeg
+favicon: /common/favicon.ico
 
 # Avatar (頭像)
 avatar:
-  img: /common/favicon.jpeg
+  img: /common/avatar.jpeg
   effect: false
 
 # Disable all banner image
