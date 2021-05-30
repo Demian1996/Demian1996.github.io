@@ -1,6 +1,7 @@
 ---
 title: ramda开发命令行工具生成多语言字典
 date: 2019-11-29 16:05:53
+description: 本文主要介绍如何利用 ramda 开发一款本地生成多语言文件的命令行工具。
 categories:
   - 前端
   - 工具开发

@@ -1,6 +1,7 @@
 ---
 title: 如何在Github Pages上部署create-react-app项目
 date: 2020-06-17 20:00:09
+description: 本文主要介绍如何利用Github Pages，简单方便地将自己开发的静态页面部署到线上使用。
 categories:
   - 前端
   - 工程化

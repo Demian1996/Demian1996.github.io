@@ -1,6 +1,7 @@
 ---
 title: 配置项目ts和hook的eslint约束
 date: 2020-08-14 09:15:14
+description: 本文主要介绍如何在前端项目中搭配使用 eslint 和腾讯封装的 eslint-config，来对项目中的 typescript 和 react hook 进行语法检测。
 categories:
   - 前端
   - 工程化

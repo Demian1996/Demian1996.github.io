@@ -1,6 +1,7 @@
 ---
 title: React父组件和子组件解耦方案
 date: 2019-03-24 22:01:12
+description: 本文主要介绍在 React 中的几种将父组件和子组件解耦的方案。
 categories:
   - 前端
   - 设计

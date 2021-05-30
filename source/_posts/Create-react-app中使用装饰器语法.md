@@ -1,6 +1,7 @@
 ---
 title: Create-react-app中使用装饰器语法
 date: 2019-03-01 02:29:45
+description: 本文主要介绍了如何在cra项目中拓展使用装饰器语法，从而支持mobx的装饰器。
 categories:
   - 前端
   - 其他

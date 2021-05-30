@@ -1,6 +1,7 @@
 ---
 title: 封装useModal复用公共弹窗组件
 date: 2020-08-09 20:00:09
+description: 本文主要介绍如何封装一个自定义的useModal hook，使得项目中各类弹窗组件的使用方式改为命令式的呼起。
 categories:
   - 前端
   - 设计

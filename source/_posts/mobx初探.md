@@ -1,6 +1,7 @@
 ---
 title: mobx初探
 date: 2019-04-23 00:39:08
+description: 本文主要介绍在 Frontend Master 网站上学到的 mobx 的相关特性。
 categories:
   - 前端
   - 状态管理
@@ -132,7 +133,7 @@ const greet = observable.box('good morning! ');
 
 ```js
 // 简单的observable
-const observable = value => {
+const observable = (value) => {
   return {
     value,
     get() {
@@ -144,7 +145,7 @@ const observable = value => {
       // 向全局通知该数据更新
       report(this.value, newValue);
       this.value = newValue;
-    }
+    },
   };
 };
 
