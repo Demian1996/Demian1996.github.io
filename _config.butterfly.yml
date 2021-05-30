@@ -87,7 +87,7 @@ favicon: /common/favicon.png
 
 # Avatar (頭像)
 avatar:
-  img: /common/favicon.png
+  img: /common/favicon.jpeg
   effect: false
 
 # Disable all banner image
