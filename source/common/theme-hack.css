@@ -3,6 +3,10 @@
   object-fit: cover;
 }
 
+#footer-wrap {
+  padding: 0.5rem 1rem;
+}
+
 /* 滚动条，摘自https://blog.csdn.net/u012208219/article/details/106883001/ */
 ::-webkit-scrollbar {
   width: 8px;

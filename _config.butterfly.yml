@@ -413,7 +413,7 @@ footer:
   owner:
     enable: true
     since: 2018
-  custom_text: —— 心里有光，哪儿都美 ——
+  custom_text:
   copyright: false # Copyright of theme and framework
 
 # Analysis
