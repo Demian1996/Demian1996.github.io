@@ -97,7 +97,7 @@ disable_top_img: false
 index_img:
 
 # If the banner of page not setting, it will show the top_img
-default_top_img: /common/blog_bg.jpeg
+default_top_img:
 
 # The banner image of archive page
 archive_img:
@@ -863,8 +863,10 @@ css_prefix: true
 inject:
   head:
     - <link rel="stylesheet" href="/common/theme-hack.css">
+    - <link rel="stylesheet" href="/common/progressive/index.css">
   bottom:
     - <script src="/common/theme-hack.js"></script>
+    - <script src="/common/progressive/index.js"></script>
 
 # CDN
 # Don't modify the following settings unless you know how they work
