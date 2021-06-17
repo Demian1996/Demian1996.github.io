@@ -107,5 +107,6 @@
 /* 首页bb的样式 */
 #bbTimeList {
   box-shadow: var(--card-box-shadow) !important;
+  margin-top: 0px !important;
   align-items: center;
 }
