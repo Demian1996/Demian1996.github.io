@@ -864,6 +864,8 @@ inject:
   head:
     - <link rel="stylesheet" href="/common/theme-hack.css">
     - <link rel="stylesheet" href="/common/progressive/index.css">
+    - <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+		- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zhheo/JS-Heo@main/bb/showbb_in_index.css">
   bottom:
     - <script src="/common/theme-hack.js"></script>
     - <script src="/common/progressive/index.js"></script>
