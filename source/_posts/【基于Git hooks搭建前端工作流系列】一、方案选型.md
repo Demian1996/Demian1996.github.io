@@ -8,7 +8,7 @@ tags:
   - Git
   - 工程化
 description: 【基于Git hooks搭建前端工作流系列】的第一篇文章，主要介绍现在主流的基于Git hooks搭建的前端工作流方案
-cover:
+cover: /2021/06/18/【基于Git hooks搭建前端工作流系列】一、方案选型/index.png
 ---
 
 ## 一、前言
