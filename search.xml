@@ -1,531 +1,353 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>Butterfly主题优化首页大图加载效果</title>
-    <url>/2021/06/05/Butterfly%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96%E9%A6%96%E9%A1%B5%E5%A4%A7%E5%9B%BE%E5%8A%A0%E8%BD%BD%E6%95%88%E6%9E%9C/</url>
-    <content><![CDATA[<h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>博客从 <code>next</code> 主题迁移到了 <code>butterfly</code> 主题，给首页换上了好看的大图。但是实际发布到 <code>github</code> 后发现网速较慢时，图片是自上到下慢慢加载的，很不美观。</p>
-<p><img src="1.gif" alt="1"></p>
-<p>调研了一圈别人 <code>butterfly</code> 主题的博客，发现主要是以<strong>增加全局的加载动画</strong>和<strong>去掉首图</strong>这两种方案为主。我一方面不想让加载动画覆盖于整个博客上，另一方面想保留首图效果。所以最终还是想以优化首图加载效果为主。一开始想用渐进式图片的方案，可即使将图片改为 <a href="https://www.zhangxinxu.com/wordpress/2013/01/progressive-jpeg-image-and-so-on/">progressive jpeg</a> ，加载效果也不够理想，马赛克着实影响体验。而之前逛 <code>medium</code> 时，有研究过 <code>medium</code> 的图片加载方案，于是参考其方案封装了对应的渐进式加载模块，优化了整体的加载效果。效果如下：(gif 可能有失真，可回到本博客首页减小网速后体验实际效果)</p>
-<p><img src="2.gif" alt="2"></p>
-<p>上述代码已经简单地抽离为 <code>gist</code>，详细地址见：</p>
-<blockquote>
-<p><a href="https://gist.github.com/Demian1996/d7ae29cb39b4091e6a64e05984dd475b">https://gist.github.com/Demian1996/d7ae29cb39b4091e6a64e05984dd475b</a></p>
-</blockquote>
-<h2 id="二、模块接入"><a href="#二、模块接入" class="headerlink" title="二、模块接入"></a>二、模块接入</h2><h3 id="1、新建和注入脚本"><a href="#1、新建和注入脚本" class="headerlink" title="1、新建和注入脚本"></a>1、新建和注入脚本</h3><p>在 <code>source</code> 下新建 <code>progressive</code> 目录，新建 <code>index.js</code> 和 <code>index.css</code> 文件。</p>
-<p><img src="3.png" alt="3"></p>
-<h3 id="2、修改-butterfly-配置"><a href="#2、修改-butterfly-配置" class="headerlink" title="2、修改 butterfly 配置"></a>2、修改 butterfly 配置</h3><p>在配置文件中修改配置，使得网页加载时能够自动加载脚本文件和样式文件</p>
-<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">inject:</span></span><br><span class="line">  <span class="attr">head:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&lt;link</span> <span class="string">rel=&quot;stylesheet&quot;</span> <span class="string">href=&quot;/common/progressive/index.css&quot;&gt;</span></span><br><span class="line">  <span class="attr">bottom:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&lt;script</span> <span class="string">src=&quot;/common/progressive/index.js&quot;&gt;&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3、接入-gist-代码"><a href="#3、接入-gist-代码" class="headerlink" title="3、接入 gist 代码"></a>3、接入 gist 代码</h3><p>将上面 <code>gist</code> 中的 <code>index.js</code> 和 <code>index.css</code> 中的代码分别拷入 <code>progressive</code> 下的文件中。然后如下方例子那样调用即可。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 传入小图和大图的地址;</span></span><br><span class="line"><span class="keyword">const</span> loader = <span class="keyword">new</span> ProgressiveLoad(<span class="string">&#x27;/common/blog_bg_min.png&#x27;</span>, <span class="string">&#x27;/common/blog_bg.png&#x27;</span>);</span><br><span class="line"><span class="comment">// 传入header节点;</span></span><br><span class="line"><span class="keyword">const</span> target = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;page-header&#x27;</span>);</span><br><span class="line"><span class="comment">// 将背景插入到header节点下的第一个节点</span></span><br><span class="line"><span class="keyword">if</span> (target.children[<span class="number">0</span>]) &#123;</span><br><span class="line">  target.insertBefore(loader.container, target.children[<span class="number">0</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>由于不同主题下，页面的 <code>dom</code> 结构和 <code>header</code> 节点的 <code>id</code> 可能不同，所以在使用模块时，需要自行修改对应的传参。</p>
-<h2 id="三、原理简介"><a href="#三、原理简介" class="headerlink" title="三、原理简介"></a>三、原理简介</h2><p>该渐进加载模块简化了 <code>medium</code> 的加载逻辑，简化后的流程图如下：</p>
-<p><img src="4.png" alt="4"></p>
-<p>下面将分步骤讲解</p>
-<h3 id="1、初始化"><a href="#1、初始化" class="headerlink" title="1、初始化"></a>1、初始化</h3><p>首先要完成该模块的 <code>dom</code> 结构，如下所示：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">header</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 渐进加载要插入的部分 --&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 容器，存放两张背景图 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;pl-container&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 小图背景 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;background-image: url(小图地址);&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 大图背景 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;background-image: url(大图地址);&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- end --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>博客标题<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>此时两张背景图的 <code>visible</code> 都设置为 <code>false</code>，默认在加载完成前不可见。另外，小图还要设置高斯模糊的遮罩样式，处理失真问题：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.pl-blur</span> &#123;</span><br><span class="line">  <span class="comment">/* 小图锯齿多，增加高斯模糊 */</span></span><br><span class="line">  <span class="attribute">filter</span>: <span class="built_in">blur</span>(<span class="number">50px</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、加载小图"><a href="#2、加载小图" class="headerlink" title="2、加载小图"></a>2、加载小图</h3><p>首先初始化 <code>image</code> 对象，并绑定 <code>onload</code> 事件</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProgressiveLoad</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">initTpl</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="built_in">this</span>.smallImg = <span class="keyword">new</span> Image();</span><br><span class="line">    <span class="built_in">this</span>.smallImg.onload = <span class="built_in">this</span>._onSmallLoaded.bind(<span class="built_in">this</span>);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="title">_onSmallLoaded</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="comment">// 加载完成时，将小图的 dom 节点设置为可见。通过修改 backgroundImage 的值，让该 dom 的背景图指向已经加载完成的小图。</span></span><br><span class="line">    <span class="built_in">this</span>.smallStage.classList.add(<span class="string">&#x27;pl-visible&#x27;</span>);</span><br><span class="line">    <span class="built_in">this</span>.smallStage.style.backgroundImage = <span class="string">`url(&#x27;<span class="subst">$&#123;<span class="built_in">this</span>.smallSrc&#125;</span>&#x27;)`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后通过设置 <code>image</code> 对象的 <code>src</code> 值，触发 <code>image</code> 对象加载图片。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProgressiveLoad</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">progressiveLoad</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.smallImg.src = <span class="built_in">this</span>.smallSrc;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最后执行 <code>onload</code> 完成事件，展示压缩过的背景图。</p>
-<h3 id="3、加载大图"><a href="#3、加载大图" class="headerlink" title="3、加载大图"></a>3、加载大图</h3><p>流程基本同小图一致。由于大图的 <code>dom</code> 节点在小图之后且两者均为绝对定位，所以大图的层级在小图之上。当大图加载完成后，只需要修改大图的 <code>visible</code> 状态，即可展示最终的超清大图。</p>
-<h2 id="四、可优化点"><a href="#四、可优化点" class="headerlink" title="四、可优化点"></a>四、可优化点</h2><p>从上面优化后的实际效果图会发现，在网速特别慢的情况下，小图也需要几秒加载时间，所以最开始会显示几秒的默认背景色。</p>
-<p>那么如何跳过该阶段，直接显示小图呢？</p>
-<p>也很简单，做一下取舍即可。首先，将背景色设置为 <code>none</code> 或者白色，然后将压缩后的图片转为 <code>base64</code>，直接写入小图的 <code>backgroundImage</code> 即可。由于小图特别小，所以可以通过将小图转为 <code>base64</code>，通过牺牲一点点首屏渲染的时间，使得页面一开始就显示小图背景，跳过显示背景色的阶段。</p>
-]]></content>
+<search> 
+  
+  
+    
+    <entry>
+      <title>【基于Git hooks搭建前端工作流系列】二、使用js实现代码语法检测</title>
+      <link href="/2021/06/18/%E3%80%90%E5%9F%BA%E4%BA%8EGit%20hooks%E6%90%AD%E5%BB%BA%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%B3%BB%E5%88%97%E3%80%91%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8js%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81%E8%AF%AD%E6%B3%95%E6%A3%80%E6%B5%8B/"/>
+      <url>/2021/06/18/%E3%80%90%E5%9F%BA%E4%BA%8EGit%20hooks%E6%90%AD%E5%BB%BA%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%B3%BB%E5%88%97%E3%80%91%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8js%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81%E8%AF%AD%E6%B3%95%E6%A3%80%E6%B5%8B/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>这是<code>基于Git hooks搭建前端工作流系列</code>的第二篇文章，主要介绍如何使用<code>js</code>实现<code>git</code>脚本文件，完成代码语法检测功能。</p><p>整个系列文章的目录如下：<br>一、方案选型：介绍现在主流的自动化方案。<br>二、使用 <code>js</code> 实现代码语法检测：介绍如何利用 <code>nodejs api</code> 做<code>文件 diff</code> 和<code>代码检测</code>。<br>三、引入插件化，集成和定制更多自动化功能：介绍如何将原来的脚本文件进行插件化，方便拓展功能和切换模板。</p><h2 id="二、脚本解释器简介"><a href="#二、脚本解释器简介" class="headerlink" title="二、脚本解释器简介"></a>二、脚本解释器简介</h2><p>以<code>git</code>提供的默认脚本文件<code>pre-commit.sample</code>的首行代码为例：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br></pre></td></tr></table></figure><p>这行代码用到了<code>Shebang</code>的概念，<code>wiki</code>给出了如下的介绍：</p><blockquote><p>在计算领域中，Shebang（也称为 Hashbang）是一个由井号和叹号构成的字符序列#!，其出现在文本文件的第一行的前两个字符。 在文件中存在 Shebang 的情况下，类 Unix 操作系统的程序加载器会分析 Shebang 后的内容，将这些内容作为解释器指令，并调用该指令，并将载有 Shebang 的文件路径作为该解释器的参数。</p></blockquote><p>从上面的描述可以看出，程序加载器会根据<code>Shebang</code>使用不同的解释器。所以我们开发<code>node</code>脚本时，可以在文件的头部增加对应的指令调用<code>node</code>解释器，如下所示：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env node</span><br></pre></td></tr></table></figure><p>以打印<code>Hello World</code>为例，我们先新建一个<code>node</code>脚本，命名为 <code>test</code>。将其设置为可执行权限，首行暂时不加<code>#!/usr/bin/env node</code>。此时在 shell 文件中执行 test 文件，会发现执行错误。</p><p><img src="2.png" alt="错误脚本执行展示"></p><p>这就是因为不加<code>#!/usr/bin/env node</code>，识别不了<code>js</code>的语法。然后我们加上<code>#!/usr/bin/env node</code>再试试：</p><p><img src="3.png" alt="正确脚本执行展示"></p><p>之所以使用<code>/usr/bin/env</code>，是因为不同用户的<code>node</code>解释器会安在不同的目录中，而<code>/usr/bin/env</code>会帮助我们去用户的<code>PATH</code>中依次查找<code>node</code>解释器的路径。</p><h2 id="三、编写-node-版本的语法检测钩子"><a href="#三、编写-node-版本的语法检测钩子" class="headerlink" title="三、编写 node 版本的语法检测钩子"></a>三、编写 node 版本的语法检测钩子</h2><h3 id="1、文件-diff，列出已修改的文件"><a href="#1、文件-diff，列出已修改的文件" class="headerlink" title="1、文件 diff，列出已修改的文件"></a>1、文件 diff，列出已修改的文件</h3><p>在<code>shell</code>中可以通过以下命令，查看暂存区修改的文件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// diff-filter：添加 (A), 赋值 (C), 删除 (D), 修改 (M), 重命名 (R)</span><br><span class="line">git diff --cached --name-only --diff-filter=ACMR</span><br></pre></td></tr></table></figure><ul><li><code>--cached</code>：显示暂存区(已 add 但未 commit 的文件)和最后一次 commit ( HEAD )之间的所有不相同文件的增删改。</li><li><code>--name-only</code>：只显示名称。</li><li><code>--diff-filter=ACMR</code>：过滤掉已删除的文件，这些文件不需要做语法检测。</li></ul><p>结合<code>node</code>的<code>api</code>，可以通过以下代码段，手动执行<code>shell</code>命令获取需要进行语法检测的文件名列表。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; exec &#125; = <span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getDiffFileList</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    exec(<span class="string">&#x27;git diff --cached --name-only --diff-filter=ACMR&#x27;</span>, <span class="function">(<span class="params">error, stdout</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (error) &#123;</span><br><span class="line">        reject(<span class="string">`exec error: <span class="subst">$&#123;error&#125;</span>`</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      resolve(stdout.split(<span class="string">&#x27;\n&#x27;</span>).filter(<span class="function">(<span class="params">diffFile</span>) =&gt;</span> <span class="regexp">/(\.js|\.jsx|\.ts|\.tsx)(\n|$)/gi</span>.test(diffFile)));</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getDiffFileList().then(<span class="built_in">console</span>.log);</span><br></pre></td></tr></table></figure><p><code>demo</code>仓库的文件修改状况如下所示：</p><p><img src="7.png" alt="result"></p><p>执行<code>shell</code>命令后的打印结果如下：</p><p><img src="6.png" alt="diff"></p><h3 id="2、eslint-检测文件"><a href="#2、eslint-检测文件" class="headerlink" title="2、eslint 检测文件"></a>2、eslint 检测文件</h3><p><a href="https://eslint.org/docs/developer-guide/nodejs-api#eslint-class">Eslint</a>提供了<code>lintFiles</code>方法检测文件，我们将从上面程序中获取到的文件数组传给该方法，即可调用<code>eslint</code>进行语法检测。代码如下：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; ESLint &#125; = <span class="built_in">require</span>(<span class="string">&#x27;eslint&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>调用eslint api</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">lintFiles</span>(<span class="params">fileList</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> eslint = <span class="keyword">new</span> ESLint();</span><br><span class="line">  <span class="keyword">return</span> eslint.lintFiles(fileList);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>整合并打印结果</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">output</span>(<span class="params">resultList</span>) </span>&#123;</span><br><span class="line">  resultList.forEach(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (result.messages &amp;&amp; result.messages.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="built_in">console</span>.error(<span class="string">`ESLint has found problems in file: <span class="subst">$&#123;result.filePath&#125;</span>`</span>);</span><br><span class="line">      result.messages.forEach(<span class="function">(<span class="params">msg</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (msg.severity === <span class="number">2</span>) &#123;</span><br><span class="line">          <span class="built_in">console</span>.error(<span class="string">`Error: <span class="subst">$&#123;msg.message&#125;</span> in Line <span class="subst">$&#123;msg.line&#125;</span> Column <span class="subst">$&#123;msg.column&#125;</span>`</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="built_in">console</span>.warn(<span class="string">`Warning: <span class="subst">$&#123;msg.message&#125;</span> in Line <span class="subst">$&#123;msg.line&#125;</span> Column <span class="subst">$&#123;msg.column&#125;</span>`</span>);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getDiffFileList().then(lintFiles).then(output);</span><br></pre></td></tr></table></figure><p>最终打印结果如下：<br><img src="8.png" alt="result"></p><h3 id="3、增加-Shebang"><a href="#3、增加-Shebang" class="headerlink" title="3、增加 Shebang"></a>3、增加 Shebang</h3><p>首先，我们新建一份与<code>git hooks</code>的<code>pre-commit</code>钩子同名的<code>pre-commit</code>文件，注意该文件没有后缀。然后在<code>shell</code>中调用<code>chmod 777 pre-commit</code>将该文件设置为可执行文件，并在首行增加<code>#!/usr/bin/env node</code>。最后，我们将这段加了<code>#!/usr/bin/env node</code>的脚本拷贝到<code>git</code>仓库的<code>.git/hooks</code>目录中，就算大功告成了。<br>我们之后的每次提交，<code>git</code>都会触发该脚本对我们改动的文件进行语法检测。<br>最终的代码见 gist: <a href="https://gist.github.com/Demian1996/d0dc27d08b38943cdb4eea212690c363#file-pre-commit">语法检测脚本</a></p><h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>本文主要介绍了如何使用<code>js</code>实现<code>git</code>脚本文件，完成代码语法检测功能。同理，我们也可以使用<code>js</code>实现<code>commit 信息检测</code>，<code>npm packages 协议风险检测</code>等功能。<br>由于笔者团队没有使用<code>husky</code>，而是采用上述的<strong>脚本文件 + vscode 插件注入的方式</strong>（详细见该系列文章的第一篇）。随着业务的不断迭代，后续的开发者在维护脚本文件时，出现了维护困难、拓展困难的问题。在下一篇文章中，笔者将介绍如何使用插件化，来隔离<strong>开发功能插件</strong>和<strong>组装 git 钩子业务</strong>的关注点，并通过 vscode 插件实现动态切换当前项目需要使用的 git 钩子。</p><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul><li><a href="https://juejin.cn/post/6865101730166767623">用「增量」思想提升代码检查和打包构建的效率</a></li></ul>]]></content>
+      
+      
       <categories>
-        <category>其他</category>
+          
+          <category> 前端 </category>
+          
+          <category> 工程化 </category>
+          
       </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Create-react-app中使用装饰器语法</title>
-    <url>/2019/03/01/Create-react-app%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%A3%85%E9%A5%B0%E5%99%A8%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="背景："><a href="#背景：" class="headerlink" title="背景："></a>背景：</h3><p>想要在 create-react-app 中使用 mobx，因为装饰器模式看起来简单，所以想让 create-react-app 支持装饰器语法。</p>
-<h3 id="项目搭建"><a href="#项目搭建" class="headerlink" title="项目搭建"></a>项目搭建</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">create-react-app test-decorator</span><br><span class="line">npm install -s mobx-react mobx</span><br></pre></td></tr></table></figure>
-
-<p>安装完毕后，若直接在 class 中使用 mobx 的@observer 语法</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;@observer&#125; <span class="keyword">from</span> <span class="string">&#x27;mobx-react&#x27;</span>;</span><br><span class="line">@observer</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br></pre></td></tr></table></figure>
-
-<p>此时会报编译错误</p>
-<span id="more"></span>
-
-<p><img src="1551331520473.png" alt="1551331520473"></p>
-<p>所以需要使用 babel 让编译时能支持装饰器语法。</p>
-<blockquote>
-<p>ps：create-react-app 可以使用其他方式支持装饰器语法，这里只提供一种简单粗暴的形式-弹出。</p>
-</blockquote>
-<h3 id="弹出-create-react-app-的项目"><a href="#弹出-create-react-app-的项目" class="headerlink" title="弹出 create-react-app 的项目"></a>弹出 create-react-app 的项目</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm run eject</span><br></pre></td></tr></table></figure>
-
-<p>发现出了点小意外:</p>
-<p>mobx 不应该先装，<code>eject得在工作区没有改动时启用，不然会弹出失败。</code></p>
-<p>于是先提交工作区的改动</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git commit -a -m &quot;init&quot;</span><br></pre></td></tr></table></figure>
-
-<p>然后再次 eject</p>
-<h3 id="安装-babel-plugin-proposal-decorators"><a href="#安装-babel-plugin-proposal-decorators" class="headerlink" title="安装@babel/plugin-proposal-decorators"></a>安装<code>@babel/plugin-proposal-decorators</code></h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install --save-dev @babel/plugin-proposal-decorators</span><br></pre></td></tr></table></figure>
-
-<p>在<code>package.json</code>中加上</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;plugins&quot;</span>: [<span class="string">&quot;@babel/plugin-proposal-decorators&quot;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>此时运行报错</p>
-<p><img src="1551335060987.png" alt="1551335060987"></p>
-<p>加上<code>decoratorsBeforeExport</code>：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">[<span class="string">&quot;@babel/plugin-proposal-decorators&quot;</span>, &#123; <span class="attr">&quot;decoratorsBeforeExport&quot;</span>: <span class="literal">true</span> &#125;],</span><br></pre></td></tr></table></figure>
-
-<p>报错：</p>
-<p><img src="1551335316388.png" alt="1551335316388"></p>
-<p>改成</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;plugins&quot;</span>: [</span><br><span class="line">    [<span class="string">&quot;@babel/plugin-proposal-decorators&quot;</span>, &#123; <span class="attr">&quot;legacy&quot;</span>: <span class="literal">true</span> &#125;],</span><br><span class="line">    [<span class="string">&quot;@babel/plugin-proposal-class-properties&quot;</span>, &#123; <span class="attr">&quot;loose&quot;</span>: <span class="literal">true</span> &#125;]</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>成功!!!</p>
-<p>猜测和我的下面的写法有关，装饰器挂在头部怪怪的</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@a</span><br><span class="line">class B</span><br></pre></td></tr></table></figure>
-
-<p>好像大佬们认为下面这样更好一点</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> @a <span class="class"><span class="keyword">class</span> <span class="title">B</span></span></span><br></pre></td></tr></table></figure>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Git </tag>
+            
+            <tag> 工程化 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>【基于Git hooks搭建前端工作流系列】一、方案选型</title>
+      <link href="/2021/06/18/%E3%80%90%E5%9F%BA%E4%BA%8EGit%20hooks%E6%90%AD%E5%BB%BA%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%B3%BB%E5%88%97%E3%80%91%E4%B8%80%E3%80%81%E6%96%B9%E6%A1%88%E9%80%89%E5%9E%8B/"/>
+      <url>/2021/06/18/%E3%80%90%E5%9F%BA%E4%BA%8EGit%20hooks%E6%90%AD%E5%BB%BA%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%B3%BB%E5%88%97%E3%80%91%E4%B8%80%E3%80%81%E6%96%B9%E6%A1%88%E9%80%89%E5%9E%8B/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>这是<code>基于Git hooks搭建前端工作流系列</code>的第一篇，该篇主要介绍了功能背景和常见的基于 <code>git hooks</code> 的解决方案。</p><p>整个系列文章的目录如下：<br>一、方案选型：介绍现在主流的自动化方案。<br>二、使用 <code>js</code> 实现代码语法检测：介绍如何利用 <code>nodejs api</code> 做文件 <code>diff</code> 和代码检测。<br>三、引入插件化，集成和定制更多自动化功能：介绍如何将原来的脚本文件进行插件化，方便拓展功能和切换模板。</p><h2 id="二、背景"><a href="#二、背景" class="headerlink" title="二、背景"></a>二、背景</h2><p>以常见的代码评审流程为例：</p><img src="1.png" width="400px" title="代码评审流程" /><p>发现问题往往需要到远端评审后才能发现，导致<strong>纠正问题的流程很长</strong>，而且评审者<strong>需要评审很多语法问题</strong>。<br>而如果基于<code>git hooks</code>，就可以将流程进行优化。通过在<code>pre-commit</code>钩子中执行 <code>eslint</code> 功能，就可以在代码提交前进行自动化检测。改造后的流程如下：</p><img src="2.png" width="300px" title="改造后的评审流程" /><p>同样的，基于<code>pre-commit</code>等钩子，我们可以定制更多的自动化脚本，节约手动管理的时间。</p><h2 id="三、Git-hooks-介绍"><a href="#三、Git-hooks-介绍" class="headerlink" title="三、Git hooks 介绍"></a>三、Git hooks 介绍</h2><p>官方介绍：</p><blockquote><p>和其它版本控制系统一样，Git 能在特定的重要动作发生时触发自定义脚本。 有两组这样的钩子：客户端的和服务器端的。 客户端钩子由诸如提交和合并这样的操作所调用，而服务器端钩子作用于诸如接收被推送的提交这样的联网操作。 你可以随心所欲地运用这些钩子。</p></blockquote><p>我们随意打开一个<code>git</code>仓库，查看目录下的<code>.git</code>文件夹</p><p><img src="3.png" alt="git hooks"></p><p>可以看到存在很多以 <code>sample</code> 为后缀的脚本文件，这些都是 <code>git</code> 提供的默认的脚本模板，去掉 <code>sample</code> 后缀，<code>git</code> 就会在对应的执行周期运行该脚本文件。<br>此处借用在<a href="https://zhuanlan.zhihu.com/p/115224711">《√ 了没？—— 介绍 Git Hooks》</a>一文中看到的流程图来描述各个钩子的执行时期：</p><p><img src="4.jpeg" alt="git hooks执行周期"></p><p>所以，我们可以通过实现同名的 <code>git hook</code> 脚本，在 <code>git</code> 提交的各个阶段实现自动化功能。</p><h2 id="四、实现方案"><a href="#四、实现方案" class="headerlink" title="四、实现方案"></a>四、实现方案</h2><p>这里仍然是以 <code>eslint</code> 检测为例，介绍常见的实现方案。<br>由于本系列文章主要是想介绍如何用原生 <code>js</code> 实现 <code>git</code> 工作流，所以在此不花太多篇幅介绍三方库的具体接入方式，只做简单的功能介绍。具体接入方式可自行查询三方库的使用文档或查看下方的参考资料。</p><h3 id="1、husky-lint-staged"><a href="#1、husky-lint-staged" class="headerlink" title="1、husky + lint-staged"></a>1、husky + lint-staged</h3><p>由于开发 <code>git hooks</code> 脚本文件需要一定的时间成本，所以可以借助 <code>husky</code> 库快速实现代码检测。该库会在<code>.git/hooks</code>目录中注入自己实现的 <code>git</code> 钩子文件，这些钩子文件被执行时会运行 <code>package.json</code> 中配置的命令，简单有效地达到自动化执行脚本的目的。</p><p>由于 <code>husky</code> 直接运行 <code>eslint</code> 会检查所有文件，所以会很慢。此时就需要借助 <code>lint-staged</code> 库，该库每次只检测改动过的文件，从而提升检测的速度。</p><p>优点：<br>1、节省开发脚本的时间。<br>2、由于是在 <code>package</code> 中集成了 <code>husky</code> 包，团队成员拉取项目 <code>npm install</code> 后就会自动安装钩子，从而保证各组员配置同步、统一。</p><p>缺点：<br>1、新旧项目都需要花时间接入 <code>husky</code> 和 <code>lint-stage</code> 等配置。</p><h3 id="2、pre-commit"><a href="#2、pre-commit" class="headerlink" title="2、pre-commit"></a>2、pre-commit</h3><p>用法、优缺点同 <code>husky</code> 类似。</p><h3 id="3、原生-js-vscode-插件-命令行工具"><a href="#3、原生-js-vscode-插件-命令行工具" class="headerlink" title="3、原生 js + vscode 插件/命令行工具"></a>3、原生 js + vscode 插件/命令行工具</h3><p><code>git</code> 脚本默认用的是 <code>bash</code> 语法，需要一定的语法基础，对于前端开发人员不是很友好。所以我们可以使用 <code>js</code> 语法实现脚本文件，在这些文件中借助 <code>nodejs api</code> 实现不同的功能。<br>优点：<br>1、用户可以借助 <code>vscode 插件</code>/<code>命令行</code>将脚本文件拷贝到<code>.git/hooks</code>目录下，不用侵入每个项目的 <code>package.json</code>。通过插件可以实现<code>vscode</code>启动后自动为当前工作区的所有仓库注入脚本文件的效果，使得所有项目自动拥有相关功能。<br>2、借助 <code>vscode 插件</code>，可以完成不同自动化配置的动态切换。比如某些项目只用语法检测，某些项目则需要语法检测+<code>commit</code>信息检测+<code>npm</code> 包开源协议检测，此时通过 <code>vscode 插件</code>，就可以通过覆盖 <code>hooks</code> 文件夹的方式达到对不同项目进行适配和动态切换的效果。这个功能会在第三篇文章中介绍到。<br>缺点：<br>1、需要一定的时间开发相应的 <code>git</code> 脚本文件以及 <code>vscode</code> 插件。<br>2、如果不借助 <code>vscode</code> 插件，小组成员之间的配置难以统一管理。</p><h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>本文主要介绍了基于 <code>Git hooks</code> 搭建前端工作流的几种方案。<code>husky</code>+<code>lint-staged</code> 基本能覆盖全部的使用场景，所以是最推荐的一种方案。而在笔者所在的团队，由于已经开发了一套支持各种功能的<code>vscode</code>插件工具，并且很多旧项目并不想接入 husky 配置，所以笔者采用了第三种方案。<br>因此，在后续的文章中，笔者将逐步介绍如何使用 <code>js</code> 开发 <code>git</code> 脚本文件，并借助<code>vscode</code>插件，实现一套自定义的、可配置的、易拓展的工作流方案。</p><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul><li><a href="https://juejin.cn/post/6865101730166767623">用「增量」思想提升代码检查和打包构建的效率</a></li><li><a href="https://juejin.cn/post/6845166890373873677">git commit 规范指北</a></li><li><a href="https://zhuanlan.zhihu.com/p/115224711">√ 了没？—— 介绍 Git Hooks</a></li></ul>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
-        <category>其他</category>
+          
+          <category> 前端 </category>
+          
+          <category> 工程化 </category>
+          
       </categories>
-      <tags>
-        <tag>React</tag>
-        <tag>Babel</tag>
-        <tag>Mobx</tag>
-        <tag>装饰器</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ramda开发命令行工具生成多语言字典</title>
-    <url>/2019/11/29/ramda%E5%BC%80%E5%8F%91%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E7%94%9F%E6%88%90%E5%A4%9A%E8%AF%AD%E8%A8%80%E5%AD%97%E5%85%B8/</url>
-    <content><![CDATA[<blockquote>
-<p>github 地址：<a href="https://github.com/Demian1996/translate">https://github.com/Demian1996/translate</a></p>
-</blockquote>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>命令行工具 translate，给定中文字典，生成 google 翻译后的多语言文件</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">translate -f zh-CN.json -l en/ja</span><br></pre></td></tr></table></figure>
-
-<p>通过该命令生成多语言文件</p>
-<span id="more"></span>
-<h2 id="模块依赖"><a href="#模块依赖" class="headerlink" title="模块依赖"></a>模块依赖</h2><ul>
-<li>命令行工具<code>commander</code></li>
-<li>请求库<code>request</code></li>
-<li>函数库<code>ramda</code></li>
-</ul>
-<h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><h4 id="目录总览"><a href="#目录总览" class="headerlink" title="目录总览"></a>目录总览</h4><p><img src="1.png" alt="1"></p>
-<p>bin 是业务逻辑处理文件</p>
-<p>package.json 配置依赖</p>
-<h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><p>首先在<code>package.json</code>的文件中配置<code>bin</code>，指定文件路径和对应的命令名:</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;bin&quot;</span>: &#123;</span><br><span class="line">  <span class="attr">&quot;translate&quot;</span>: <span class="string">&quot;./bin/index.js&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后在 bin 文件夹下新建入口文件 index.js，在文件首行配置</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br></pre></td></tr></table></figure>
-
-<p>这一行是指定使用 node 执行脚本文件</p>
-<p>然后执行命令<code>npm link</code>，就可以全局使用 translate 命令了。</p>
-<h4 id="参数解析"><a href="#参数解析" class="headerlink" title="参数解析"></a>参数解析</h4><p>使用模块 Commander 解析命令行参数：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">commander.option(<span class="string">&#x27;-f --file &lt;filename&gt;&#x27;</span>, <span class="string">&#x27;translate file&#x27;</span>, callback);</span><br><span class="line">commander.option(<span class="string">&#x27;-l --languages [languages]&#x27;</span>, <span class="string">&#x27;languages&#x27;</span>, <span class="string">&#x27;en&#x27;</span>);</span><br><span class="line">commander.parse(process.argv);</span><br></pre></td></tr></table></figure>
-
-<p>通过<code>-f</code>指定中文字典文件，通过<code>-l</code>指定目标语言，默认翻译为英文。<code>callback</code>主要是判断文件是否存在若不存在则返回 null，存在则返回 json 对象。后续可以通过 commander.file 获取 json 对象。</p>
-<h4 id="流程处理"><a href="#流程处理" class="headerlink" title="流程处理"></a>流程处理</h4><p>业务逻辑如下：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> generateDictionary = R.pipe(getLanguageArray, fetchTranslateApi, mapTranslation, generateFile);</span><br><span class="line">generateDictionary();</span><br></pre></td></tr></table></figure>
-
-<p>即获取目标语言数组-&gt;爬取 google 翻译 api-&gt;从返回值中筛选出翻译值-&gt;生成目标语言的 json 文件。</p>
-<p>详细流程见源码</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Git </tag>
+            
+            <tag> 工程化 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Butterfly主题优化首页大图加载效果</title>
+      <link href="/2021/06/05/Butterfly%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96%E9%A6%96%E9%A1%B5%E5%A4%A7%E5%9B%BE%E5%8A%A0%E8%BD%BD%E6%95%88%E6%9E%9C/"/>
+      <url>/2021/06/05/Butterfly%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96%E9%A6%96%E9%A1%B5%E5%A4%A7%E5%9B%BE%E5%8A%A0%E8%BD%BD%E6%95%88%E6%9E%9C/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>博客从 <code>next</code> 主题迁移到了 <code>butterfly</code> 主题，给首页换上了好看的大图。但是实际发布到 <code>github</code> 后发现网速较慢时，图片是自上到下慢慢加载的，很不美观。</p><p><img src="1.gif" alt="1"></p><p>调研了一圈别人 <code>butterfly</code> 主题的博客，发现主要是以<strong>增加全局的加载动画</strong>和<strong>去掉首图</strong>这两种方案为主。我一方面不想让加载动画覆盖于整个博客上，另一方面想保留首图效果。所以最终还是想以优化首图加载效果为主。一开始想用渐进式图片的方案，可即使将图片改为 <a href="https://www.zhangxinxu.com/wordpress/2013/01/progressive-jpeg-image-and-so-on/">progressive jpeg</a> ，加载效果也不够理想，马赛克着实影响体验。而之前逛 <code>medium</code> 时，有研究过 <code>medium</code> 的图片加载方案，于是参考其方案封装了对应的渐进式加载模块，优化了整体的加载效果。效果如下：(gif 可能有失真，可回到本博客首页减小网速后体验实际效果)</p><p><img src="2.gif" alt="2"></p><p>上述代码已经简单地抽离为 <code>gist</code>，详细地址见：</p><blockquote><p><a href="https://gist.github.com/Demian1996/d7ae29cb39b4091e6a64e05984dd475b">https://gist.github.com/Demian1996/d7ae29cb39b4091e6a64e05984dd475b</a></p></blockquote><h2 id="二、模块接入"><a href="#二、模块接入" class="headerlink" title="二、模块接入"></a>二、模块接入</h2><h3 id="1、新建和注入脚本"><a href="#1、新建和注入脚本" class="headerlink" title="1、新建和注入脚本"></a>1、新建和注入脚本</h3><p>在 <code>source</code> 下新建 <code>progressive</code> 目录，新建 <code>index.js</code> 和 <code>index.css</code> 文件。</p><p><img src="3.png" alt="3"></p><h3 id="2、修改-butterfly-配置"><a href="#2、修改-butterfly-配置" class="headerlink" title="2、修改 butterfly 配置"></a>2、修改 butterfly 配置</h3><p>在配置文件中修改配置，使得网页加载时能够自动加载脚本文件和样式文件</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">inject:</span></span><br><span class="line">  <span class="attr">head:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&lt;link</span> <span class="string">rel=&quot;stylesheet&quot;</span> <span class="string">href=&quot;/common/progressive/index.css&quot;&gt;</span></span><br><span class="line">  <span class="attr">bottom:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&lt;script</span> <span class="string">src=&quot;/common/progressive/index.js&quot;&gt;&lt;/script&gt;</span></span><br></pre></td></tr></table></figure><h3 id="3、接入-gist-代码"><a href="#3、接入-gist-代码" class="headerlink" title="3、接入 gist 代码"></a>3、接入 gist 代码</h3><p>将上面 <code>gist</code> 中的 <code>index.js</code> 和 <code>index.css</code> 中的代码分别拷入 <code>progressive</code> 下的文件中。然后如下方例子那样调用即可。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 传入小图和大图的地址;</span></span><br><span class="line"><span class="keyword">const</span> loader = <span class="keyword">new</span> ProgressiveLoad(<span class="string">&#x27;/common/blog_bg_min.png&#x27;</span>, <span class="string">&#x27;/common/blog_bg.png&#x27;</span>);</span><br><span class="line"><span class="comment">// 传入header节点;</span></span><br><span class="line"><span class="keyword">const</span> target = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;page-header&#x27;</span>);</span><br><span class="line"><span class="comment">// 将背景插入到header节点下的第一个节点</span></span><br><span class="line"><span class="keyword">if</span> (target.children[<span class="number">0</span>]) &#123;</span><br><span class="line">  target.insertBefore(loader.container, target.children[<span class="number">0</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>由于不同主题下，页面的 <code>dom</code> 结构和 <code>header</code> 节点的 <code>id</code> 可能不同，所以在使用模块时，需要自行修改对应的传参。</p><h2 id="三、原理简介"><a href="#三、原理简介" class="headerlink" title="三、原理简介"></a>三、原理简介</h2><p>该渐进加载模块简化了 <code>medium</code> 的加载逻辑，简化后的流程图如下：</p><p><img src="4.png" alt="4"></p><p>下面将分步骤讲解</p><h3 id="1、初始化"><a href="#1、初始化" class="headerlink" title="1、初始化"></a>1、初始化</h3><p>首先要完成该模块的 <code>dom</code> 结构，如下所示：</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">header</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 渐进加载要插入的部分 --&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 容器，存放两张背景图 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;pl-container&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 小图背景 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;background-image: url(小图地址);&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 大图背景 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;background-image: url(大图地址);&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- end --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>博客标题<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br></pre></td></tr></table></figure><p>此时两张背景图的 <code>visible</code> 都设置为 <code>false</code>，默认在加载完成前不可见。另外，小图还要设置高斯模糊的遮罩样式，处理失真问题：</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.pl-blur</span> &#123;</span><br><span class="line">  <span class="comment">/* 小图锯齿多，增加高斯模糊 */</span></span><br><span class="line">  <span class="attribute">filter</span>: <span class="built_in">blur</span>(<span class="number">50px</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2、加载小图"><a href="#2、加载小图" class="headerlink" title="2、加载小图"></a>2、加载小图</h3><p>首先初始化 <code>image</code> 对象，并绑定 <code>onload</code> 事件</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProgressiveLoad</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">initTpl</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="built_in">this</span>.smallImg = <span class="keyword">new</span> Image();</span><br><span class="line">    <span class="built_in">this</span>.smallImg.onload = <span class="built_in">this</span>._onSmallLoaded.bind(<span class="built_in">this</span>);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="title">_onSmallLoaded</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="comment">// 加载完成时，将小图的 dom 节点设置为可见。通过修改 backgroundImage 的值，让该 dom 的背景图指向已经加载完成的小图。</span></span><br><span class="line">    <span class="built_in">this</span>.smallStage.classList.add(<span class="string">&#x27;pl-visible&#x27;</span>);</span><br><span class="line">    <span class="built_in">this</span>.smallStage.style.backgroundImage = <span class="string">`url(&#x27;<span class="subst">$&#123;<span class="built_in">this</span>.smallSrc&#125;</span>&#x27;)`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>然后通过设置 <code>image</code> 对象的 <code>src</code> 值，触发 <code>image</code> 对象加载图片。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProgressiveLoad</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">progressiveLoad</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.smallImg.src = <span class="built_in">this</span>.smallSrc;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>最后执行 <code>onload</code> 完成事件，展示压缩过的背景图。</p><h3 id="3、加载大图"><a href="#3、加载大图" class="headerlink" title="3、加载大图"></a>3、加载大图</h3><p>流程基本同小图一致。由于大图的 <code>dom</code> 节点在小图之后且两者均为绝对定位，所以大图的层级在小图之上。当大图加载完成后，只需要修改大图的 <code>visible</code> 状态，即可展示最终的超清大图。</p><h2 id="四、可优化点"><a href="#四、可优化点" class="headerlink" title="四、可优化点"></a>四、可优化点</h2><p>从上面优化后的实际效果图会发现，在网速特别慢的情况下，小图也需要几秒加载时间，所以最开始会显示几秒的默认背景色。</p><p>那么如何跳过该阶段，直接显示小图呢？</p><p>也很简单，做一下取舍即可。首先，将背景色设置为 <code>none</code> 或者白色，然后将压缩后的图片转为 <code>base64</code>，直接写入小图的 <code>backgroundImage</code> 即可。由于小图特别小，所以可以通过将小图转为 <code>base64</code>，通过牺牲一点点首屏渲染的时间，使得页面一开始就显示小图背景，跳过显示背景色的阶段。</p>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
-        <category>工具开发</category>
+          
+          <category> 其他 </category>
+          
       </categories>
-      <tags>
-        <tag>Ramda</tag>
-        <tag>函数式编程</tag>
-        <tag>命令行工具</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>react中减少render臃肿的方法</title>
-    <url>/2019/03/07/react%E4%B8%AD%E5%87%8F%E5%B0%91render%E8%87%83%E8%82%BF%E7%9A%84%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p>最近看了mobx的相关知识，对computed属性十分喜欢。</p>
-<p>想起在日常的项目开发中，react经常需要在render函数的开始部分进行一些props属性的计算，再将计算值用于渲染。一般会有以下画面：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="built_in">this</span>.props;</span><br><span class="line">    <span class="keyword">const</span> fullName = firstName + secondName;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;fullName&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<span id="more"></span>
-<p>当业务逻辑复杂时可能会造成render函数十分的臃肿。也许我们会进行这样的优化：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  getFullName = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="built_in">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> firstName + secondName;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.getFullName()&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但是我们实质上寻求的是一种computed的属性，将其封装成函数只是一种曲线救国的手段。<br>直到我在看frontend master的过程中，才发现原来可以使用class的get属性：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">get</span> <span class="title">fullName</span>() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="built_in">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> firstName + secondName;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.fullName&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>使用get属性实现computed的功能可以减少render函数的臃肿。</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Hexo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>配置项目ts和hook的eslint约束</title>
+      <link href="/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/"/>
+      <url>/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/</url>
+      
+        <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。</p><p>鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见<a href="https://github.com/AlloyTeam/eslint-config-alloy">eslint-config-alloy</a></p><span id="more"></span><h2 id="第一步：安装-更新-Vscode-插件-Eslint"><a href="#第一步：安装-更新-Vscode-插件-Eslint" class="headerlink" title="第一步：安装/更新 Vscode 插件 Eslint"></a>第一步：安装/更新 Vscode 插件 Eslint</h2><p>vscode 中更新 Eslint 插件到最新版，保证对 typescript-eslint 的支持。</p><p><img src="1.png" alt="1"></p><h2 id="第二步：安装-Eslint-config-alloy"><a href="#第二步：安装-Eslint-config-alloy" class="headerlink" title="第二步：安装 Eslint-config-alloy"></a>第二步：安装 Eslint-config-alloy</h2><p>AlloyTeam ESLint：是一套先进的适用于 React/Vue/Typescript 项目的 ESLint 配置规范，而且也是配置个性化 ESLint 规则的最佳参考。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev eslint typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-config-alloy</span><br></pre></td></tr></table></figure><p>安装完毕后，在.eslintrc.js 文件中新增配置如下:</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="attr">extends</span>: [<span class="string">&#x27;alloy&#x27;</span>, <span class="string">&#x27;alloy/react&#x27;</span>, <span class="string">&#x27;alloy/typescript&#x27;</span>],</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>此时项目已经支持对 ts 的 eslint 限制， 可以通过新建一个 index.tsx，在其中新建变量 var，此时 eslint 会进行报错：</p><p><img src="2.png" alt="2"></p><blockquote><p>ps: 如果装完后，vscode 没有成功给出提示。先打开 vscode 命令行，在“终端”中选择 Eslint，查看具体错误。如果是报找不到包的错误，很可能是之前安装过上面的某个包，版本和现在安装的其他包不兼容。可以试试先将上面的所有包全部 uninstall，再重新 install。</p></blockquote><h2 id="第三步：安装-hook-规范"><a href="#第三步：安装-hook-规范" class="headerlink" title="第三步：安装 hook 规范"></a>第三步：安装 hook 规范</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev eslint-plugin-react-hooks</span><br></pre></td></tr></table></figure><p>安装完毕后，在.eslintrc.js 文件中新增</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extends</span>: [</span><br><span class="line">    ...,</span><br><span class="line">    <span class="string">&#x27;plugin:react-hooks/recommended&#x27;</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure><p>这里我们使用的是 plugin 提供的推荐配置，想要自定义配置可自行参照官方文档，在 rules 中进行配置。</p>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
-        <category>设计</category>
+          
+          <category> 前端 </category>
+          
+          <category> 工程化 </category>
+          
       </categories>
-      <tags>
-        <tag>React</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo发布文章流程记录</title>
-    <url>/2018/11/09/hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[<p>新建文章</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new post &quot;title&quot;</span><br></pre></td></tr></table></figure>
-
-<p>生成静态网页</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure>
-
-<p>本地预览</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-<p>同步至 github 服务器</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Eslint </tag>
+            
+            <tag> Typescript </tag>
+            
+            <tag> Alloy </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>封装useModal复用公共弹窗组件</title>
+      <link href="/2020/08/09/%E5%B0%81%E8%A3%85useModal%E5%A4%8D%E7%94%A8%E5%85%AC%E5%85%B1%E5%BC%B9%E7%AA%97%E7%BB%84%E4%BB%B6/"/>
+      <url>/2020/08/09/%E5%B0%81%E8%A3%85useModal%E5%A4%8D%E7%94%A8%E5%85%AC%E5%85%B1%E5%BC%B9%E7%AA%97%E7%BB%84%E4%BB%B6/</url>
+      
+        <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在常规的业务开发中，经常会用到 Modal 组件。当笔者在开发实际项目时，业务需求要求我在同一个页面分别使用 2-3 种弹窗。理论来说此时只需要使用一个 Modal 组件，定制不同内容即可。但是痛苦常常来源于生活，由于团队人员变动、公共组件管理不够规范、重复造轮子等各种原因，我们往往需要接入各种不同种类的弹窗组件，比如在下面的代码中，我使用的 ExitModal 和 DeleteModal 就出自不同人之手：</p><span id="more"></span><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> App = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [isShowExitModal, setIsShowExitModal] = useState(<span class="literal">false</span>);</span><br><span class="line">  <span class="keyword">const</span> [isShowDeleteModal, setIsShowDeleteModal] = useState(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> setIsShowExitModal(true)&#125;&gt;显示退出弹窗<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> setIsShowDeleteModal(true)&#125;&gt;显示删除弹窗<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">ExitModal</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">        <span class="attr">visible</span>=<span class="string">&#123;isShowExitModal&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">        <span class="attr">onOk</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="xml">          console.log(&#x27;成功退出&#x27;);</span></span><br><span class="line"><span class="xml">          setIsShowExitModal(false);</span></span><br><span class="line"><span class="xml">        &#125;&#125;</span></span><br><span class="line"><span class="xml">        onCancel=&#123;() =&gt; setIsShowExitModal(false)&#125;</span></span><br><span class="line"><span class="xml">      /&gt;</span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">DeleteModal</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">        <span class="attr">visible</span>=<span class="string">&#123;isShowDeleteModal&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">        <span class="attr">onOk</span>=<span class="string">&#123;()</span> =&gt;</span> console.log(&#x27;成功删除&#x27;)&#125;</span></span><br><span class="line"><span class="xml">        onCancel=&#123;() =&gt; setIsShowDeleteModal(false)&#125;</span></span><br><span class="line"><span class="xml">      /&gt;</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>该组件的状态依赖如下所示：</p><p><img src="1.png" alt="1"></p><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>可以看到，在现有场景下，我们封装业务组件如果以这种模式处理，往往会面临以下问题：</p><ul><li>业务组件需要维护和直接依赖 Modal 组件的显隐状态，Modal 组件越多，冗余的 ui 状态越多</li><li>如果 Modal 组件在封装时没有使用 createPortal 的 API，Modal 组件就会挂载到业务组件的真实 dom 中，影响业务组件的 dom 树</li></ul><h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>首先我们期望的是在优化之后能够保证业务组件和 Modal 组件的状态脱钩，业务组件仅仅需要调用第三方提供的 show 方法调起弹窗，后续的操作都交给第三方处理。其次，我们期望在优化之后，无论 Modal 组件之前是怎么设计的，业务方调用时都会将其挂载到 body 下，不影响自身的 dom 结构。</p><p>因此，笔者封装了 useModal 这个 hook，接受 Modal 组件，返回统一的 Modal 代理。由代理解决上面的两个问题。具体使用如下：</p><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> App = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> exitModal = useModal(ExitModal);</span><br><span class="line">  <span class="keyword">const</span> deleteModal = useModal(DeleteModal);</span><br><span class="line">  <span class="keyword">const</span> onShowExitModal = useCallback(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    exitModal.show(&#123;</span><br><span class="line">      <span class="attr">onOk</span>: <span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;退出成功&#x27;</span>),</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;, [exitModal]);</span><br><span class="line">  <span class="keyword">const</span> onShowDeleteModal = useCallback(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    deleteModal.show(&#123;</span><br><span class="line">      <span class="attr">onOk</span>: <span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;删除成功&#x27;</span>),</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;, [deleteModal]);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">onClick</span>=<span class="string">&#123;onShowExitModal&#125;</span>&gt;</span>显示退出弹窗<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">onClick</span>=<span class="string">&#123;onShowDeleteModal&#125;</span>&gt;</span>显示删除弹窗<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>此时，业务组件只需要依赖不同 modal 实例的代理，调用代理的 show 方法调起弹窗，不需要手动修改 visible 状态和在 renderTree 中插入 Modal 组件。</p><h2 id="UseModal-详解"><a href="#UseModal-详解" class="headerlink" title="UseModal 详解"></a>UseModal 详解</h2><p>使用 useModal 后的 uml 图如下所示：</p><p><img src="2.png" alt="2"></p><p>useModal 接受实现了 Modal 接口的 React 组件，然后返回一个代理，该代理提供了 show 和 destroy 方法。窗口的 ui 状态和组件挂载逻辑交由代理控制，业务组件只需要知道代理的接口，即可实现窗口管理。</p><p>下面介绍一下 useModal 实现 show 和 destroy 的基本原理：</p><p>useModal 会维护具体的窗口实例的 visible 状态和真实的 Modal 组件，在业务调用 show 方法时，useModal 会调用 ReactDOM 的 render 方法将 Modal 组件挂载到 body 的 dom 下，在业务调用 destroy 方法是 ReactDOM 的 unmountComponentAtNode 方法卸载状态。<br>具体逻辑如下：</p><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> unmount = useCallback(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> result = ReactDOM.unmountComponentAtNode(mountNode);</span><br><span class="line">  <span class="keyword">if</span> (result &amp;&amp; mountNode.parentNode) &#123;</span><br><span class="line">    mountNode.parentNode.removeChild(mountNode);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, [mountNode]);</span><br><span class="line"><span class="keyword">const</span> render = useCallback(</span><br><span class="line">  <span class="function">(<span class="params">modalProps: IModalProps</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(mountNode);</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      ReactDOM.render(<span class="xml"><span class="tag">&lt;<span class="name">Modal</span> &#123;<span class="attr">...modalProps</span>&#125;&gt;</span><span class="tag">&lt;/<span class="name">Modal</span>&gt;</span></span>, mountNode);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">  [mountNode]</span><br><span class="line">);</span><br></pre></td></tr></table></figure><h2 id="进一步思考"><a href="#进一步思考" class="headerlink" title="进一步思考"></a>进一步思考</h2><p>当前的 useModal 很好的实现了状态解耦，但是可以看到它给所有 Modal 组件增加了一层约束，即所有弹窗组件都要满足 Modal 这一接口。</p><p>实际业务中，可能会遇到 Modal 组件不符合这一接口的，此时我们可以通过进一步实现 ModalAdapter 等方式解决问题。</p>]]></content>
+      
+      
       <categories>
-        <category>其他</category>
+          
+          <category> 前端 </category>
+          
+          <category> 设计 </category>
+          
       </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【基于Git hooks搭建前端工作流系列】一、方案选型</title>
-    <url>/2021/06/18/%E3%80%90%E5%9F%BA%E4%BA%8EGit%20hooks%E6%90%AD%E5%BB%BA%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%B3%BB%E5%88%97%E3%80%91%E4%B8%80%E3%80%81%E6%96%B9%E6%A1%88%E9%80%89%E5%9E%8B/</url>
-    <content><![CDATA[<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>这是<code>基于Git hooks搭建前端工作流系列</code>的第一篇，该篇主要介绍了功能背景和常见的基于 <code>git hooks</code> 的解决方案。</p>
-<p>整个系列文章的目录如下：<br>一、方案选型：介绍现在主流的自动化方案。<br>二、使用 <code>js</code> 实现代码语法检测：介绍如何利用 <code>nodejs api</code> 做文件 <code>diff</code> 和代码检测。<br>三、引入插件化，集成和定制更多自动化功能：介绍如何将原来的脚本文件进行插件化，方便拓展功能和切换模板。</p>
-<h2 id="二、背景"><a href="#二、背景" class="headerlink" title="二、背景"></a>二、背景</h2><p>以常见的代码评审流程为例：</p>
-<img src="1.png" width="400px" title="代码评审流程" />
-
-<p>发现问题往往需要到远端评审后才能发现，导致<strong>纠正问题的流程很长</strong>，而且评审者<strong>需要评审很多语法问题</strong>。<br>而如果基于<code>git hooks</code>，就可以将流程进行优化。通过在<code>pre-commit</code>钩子中执行 <code>eslint</code> 功能，就可以在代码提交前进行自动化检测。改造后的流程如下：</p>
-<img src="2.png" width="300px" title="改造后的评审流程" />
-
-<p>同样的，基于<code>pre-commit</code>等钩子，我们可以定制更多的自动化脚本，节约手动管理的时间。</p>
-<h2 id="三、Git-hooks-介绍"><a href="#三、Git-hooks-介绍" class="headerlink" title="三、Git hooks 介绍"></a>三、Git hooks 介绍</h2><p>官方介绍：</p>
-<blockquote>
-<p>和其它版本控制系统一样，Git 能在特定的重要动作发生时触发自定义脚本。 有两组这样的钩子：客户端的和服务器端的。 客户端钩子由诸如提交和合并这样的操作所调用，而服务器端钩子作用于诸如接收被推送的提交这样的联网操作。 你可以随心所欲地运用这些钩子。</p>
-</blockquote>
-<p>我们随意打开一个<code>git</code>仓库，查看目录下的<code>.git</code>文件夹</p>
-<p><img src="3.png" alt="git hooks"></p>
-<p>可以看到存在很多以 <code>sample</code> 为后缀的脚本文件，这些都是 <code>git</code> 提供的默认的脚本模板，去掉 <code>sample</code> 后缀，<code>git</code> 就会在对应的执行周期运行该脚本文件。<br>此处借用在<a href="https://zhuanlan.zhihu.com/p/115224711">《√ 了没？—— 介绍 Git Hooks》</a>一文中看到的流程图来描述各个钩子的执行时期：</p>
-<p><img src="4.jpeg" alt="git hooks执行周期"></p>
-<p>所以，我们可以通过实现同名的 <code>git hook</code> 脚本，在 <code>git</code> 提交的各个阶段实现自动化功能。</p>
-<h2 id="四、实现方案"><a href="#四、实现方案" class="headerlink" title="四、实现方案"></a>四、实现方案</h2><p>这里仍然是以 <code>eslint</code> 检测为例，介绍常见的实现方案。<br>由于本系列文章主要是想介绍如何用原生 <code>js</code> 实现 <code>git</code> 工作流，所以在此不花太多篇幅介绍三方库的具体接入方式，只做简单的功能介绍。具体接入方式可自行查询三方库的使用文档或查看下方的参考资料。</p>
-<h3 id="1、husky-lint-staged"><a href="#1、husky-lint-staged" class="headerlink" title="1、husky + lint-staged"></a>1、husky + lint-staged</h3><p>由于开发 <code>git hooks</code> 脚本文件需要一定的时间成本，所以可以借助 <code>husky</code> 库快速实现代码检测。该库会在<code>.git/hooks</code>目录中注入自己实现的 <code>git</code> 钩子文件，这些钩子文件被执行时会运行 <code>package.json</code> 中配置的命令，简单有效地达到自动化执行脚本的目的。</p>
-<p>由于 <code>husky</code> 直接运行 <code>eslint</code> 会检查所有文件，所以会很慢。此时就需要借助 <code>lint-staged</code> 库，该库每次只检测改动过的文件，从而提升检测的速度。</p>
-<p>优点：<br>1、节省开发脚本的时间。<br>2、由于是在 <code>package</code> 中集成了 <code>husky</code> 包，团队成员拉取项目 <code>npm install</code> 后就会自动安装钩子，从而保证各组员配置同步、统一。</p>
-<p>缺点：<br>1、新旧项目都需要花时间接入 <code>husky</code> 和 <code>lint-stage</code> 等配置。</p>
-<h3 id="2、pre-commit"><a href="#2、pre-commit" class="headerlink" title="2、pre-commit"></a>2、pre-commit</h3><p>用法、优缺点同 <code>husky</code> 类似。</p>
-<h3 id="3、原生-js-vscode-插件-命令行工具"><a href="#3、原生-js-vscode-插件-命令行工具" class="headerlink" title="3、原生 js + vscode 插件/命令行工具"></a>3、原生 js + vscode 插件/命令行工具</h3><p><code>git</code> 脚本默认用的是 <code>bash</code> 语法，需要一定的语法基础，对于前端开发人员不是很友好。所以我们可以使用 <code>js</code> 语法实现脚本文件，在这些文件中借助 <code>nodejs api</code> 实现不同的功能。<br>优点：<br>1、用户可以借助 <code>vscode 插件</code>/<code>命令行</code>将脚本文件拷贝到<code>.git/hooks</code>目录下，不用侵入每个项目的 <code>package.json</code>。通过插件可以实现<code>vscode</code>启动后自动为当前工作区的所有仓库注入脚本文件的效果，使得所有项目自动拥有相关功能。<br>2、借助 <code>vscode 插件</code>，可以完成不同自动化配置的动态切换。比如某些项目只用语法检测，某些项目则需要语法检测+<code>commit</code>信息检测+<code>npm</code> 包开源协议检测，此时通过 <code>vscode 插件</code>，就可以通过覆盖 <code>hooks</code> 文件夹的方式达到对不同项目进行适配和动态切换的效果。这个功能会在第三篇文章中介绍到。<br>缺点：<br>1、需要一定的时间开发相应的 <code>git</code> 脚本文件以及 <code>vscode</code> 插件。<br>2、如果不借助 <code>vscode</code> 插件，小组成员之间的配置难以统一管理。</p>
-<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>本文主要介绍了基于 <code>Git hooks</code> 搭建前端工作流的几种方案。<code>husky</code>+<code>lint-staged</code> 基本能覆盖全部的使用场景，所以是最推荐的一种方案。而在笔者所在的团队，由于已经开发了一套支持各种功能的<code>vscode</code>插件工具，并且很多旧项目并不想接入 husky 配置，所以笔者采用了第三种方案。<br>因此，在后续的文章中，笔者将逐步介绍如何使用 <code>js</code> 开发 <code>git</code> 脚本文件，并借助<code>vscode</code>插件，实现一套自定义的、可配置的、易拓展的工作流方案。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://juejin.cn/post/6865101730166767623">用「增量」思想提升代码检查和打包构建的效率</a></li>
-<li><a href="https://juejin.cn/post/6845166890373873677">git commit 规范指北</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/115224711">√ 了没？—— 介绍 Git Hooks</a></li>
-</ul>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> React </tag>
+            
+            <tag> 组件设计 </tag>
+            
+            <tag> React Hook </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>如何在Github Pages上部署create-react-app项目</title>
+      <link href="/2020/06/17/%E5%A6%82%E4%BD%95%E5%9C%A8Github-Pages%E4%B8%8A%E9%83%A8%E7%BD%B2create-react-app%E9%A1%B9%E7%9B%AE/"/>
+      <url>/2020/06/17/%E5%A6%82%E4%BD%95%E5%9C%A8Github-Pages%E4%B8%8A%E9%83%A8%E7%BD%B2create-react-app%E9%A1%B9%E7%9B%AE/</url>
+      
+        <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>笔者经常会用 create-react-app 做些 demo 项目。其中某些打算维护的项目，笔者会将其放到 github 上。但是此时的问题往往是，README 不能够很好的阐述项目的全貌，此时就需要将项目部署到线上，达到在线预览的效果。而 Github Pages 服务就可以很好的满足这个效果。</p><span id="more"></span><h2 id="步骤介绍"><a href="#步骤介绍" class="headerlink" title="步骤介绍"></a>步骤介绍</h2><h3 id="一、项目初始化"><a href="#一、项目初始化" class="headerlink" title="一、项目初始化"></a>一、项目初始化</h3><p>创建项目:</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx create-react-app demo</span><br></pre></td></tr></table></figure><p>然后在 package.json 中配置</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="attr">&quot;homepage&quot;</span>: <span class="string">&quot;./&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="attr">&quot;deploy&quot;</span>: <span class="string">&quot;gh-pages -d build&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>配置 homepage 是为了后续打包时生成的路径为相对路径。<br>配置 deploy 是为了打完包后将所有静态文件部署到 github 的 gh-pages 分支上。</p><blockquote><p>Github Pages 默认只支持 master、gh-pages 两个分支和 master/docs 目录。</p></blockquote><h3 id="二、构建本地项目"><a href="#二、构建本地项目" class="headerlink" title="二、构建本地项目"></a>二、构建本地项目</h3><p>本文中默认用的构建脚手架是 create-react-app，生成的 package.json 中自带了构建命令：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure><p>执行后，项目中会生成 build 目录</p><h3 id="三、安装-gh-pages-依赖"><a href="#三、安装-gh-pages-依赖" class="headerlink" title="三、安装 gh-pages 依赖"></a>三、安装 gh-pages 依赖</h3><blockquote><p>gh-pages: 默认会发布文件到 github 的 gh-pages 分支</p></blockquote><p>安装依赖：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gh-pages --save-dev</span><br></pre></td></tr></table></figure><h3 id="四、部署"><a href="#四、部署" class="headerlink" title="四、部署"></a>四、部署</h3><p>运行命令</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run deploy</span><br></pre></td></tr></table></figure><p>完成后，github 上会生成 gh-pages 分支，该分支下包含 build 目录中所有文件</p><p>此时打开 github，进入到具体项目中，具体如图所示</p><p><img src="1.png" alt="1"></p><p><img src="2.png" alt="2"></p><p>然后，点击 settings，在 Github Pages 标题下，将 source 分支设置为 gh-pages。<br>如图所示</p><p><img src="3.png" alt="3"></p><p>然后访问 {username}.github.io/{项目名}，就可以在线预览项目了。</p>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
-        <category>工程化</category>
+          
+          <category> 前端 </category>
+          
+          <category> 工程化 </category>
+          
       </categories>
-      <tags>
-        <tag>Git</tag>
-        <tag>工程化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>如何在Github Pages上部署create-react-app项目</title>
-    <url>/2020/06/17/%E5%A6%82%E4%BD%95%E5%9C%A8Github-Pages%E4%B8%8A%E9%83%A8%E7%BD%B2create-react-app%E9%A1%B9%E7%9B%AE/</url>
-    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>笔者经常会用 create-react-app 做些 demo 项目。其中某些打算维护的项目，笔者会将其放到 github 上。但是此时的问题往往是，README 不能够很好的阐述项目的全貌，此时就需要将项目部署到线上，达到在线预览的效果。而 Github Pages 服务就可以很好的满足这个效果。</p>
-<span id="more"></span>
-
-<h2 id="步骤介绍"><a href="#步骤介绍" class="headerlink" title="步骤介绍"></a>步骤介绍</h2><h3 id="一、项目初始化"><a href="#一、项目初始化" class="headerlink" title="一、项目初始化"></a>一、项目初始化</h3><p>创建项目:</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npx create-react-app demo</span><br></pre></td></tr></table></figure>
-
-<p>然后在 package.json 中配置</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="attr">&quot;homepage&quot;</span>: <span class="string">&quot;./&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="attr">&quot;deploy&quot;</span>: <span class="string">&quot;gh-pages -d build&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>配置 homepage 是为了后续打包时生成的路径为相对路径。<br>配置 deploy 是为了打完包后将所有静态文件部署到 github 的 gh-pages 分支上。</p>
-<blockquote>
-<p>Github Pages 默认只支持 master、gh-pages 两个分支和 master/docs 目录。</p>
-</blockquote>
-<h3 id="二、构建本地项目"><a href="#二、构建本地项目" class="headerlink" title="二、构建本地项目"></a>二、构建本地项目</h3><p>本文中默认用的构建脚手架是 create-react-app，生成的 package.json 中自带了构建命令：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<p>执行后，项目中会生成 build 目录</p>
-<h3 id="三、安装-gh-pages-依赖"><a href="#三、安装-gh-pages-依赖" class="headerlink" title="三、安装 gh-pages 依赖"></a>三、安装 gh-pages 依赖</h3><blockquote>
-<p>gh-pages: 默认会发布文件到 github 的 gh-pages 分支</p>
-</blockquote>
-<p>安装依赖：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm install gh-pages --save-dev</span><br></pre></td></tr></table></figure>
-
-<h3 id="四、部署"><a href="#四、部署" class="headerlink" title="四、部署"></a>四、部署</h3><p>运行命令</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm run deploy</span><br></pre></td></tr></table></figure>
-
-<p>完成后，github 上会生成 gh-pages 分支，该分支下包含 build 目录中所有文件</p>
-<p>此时打开 github，进入到具体项目中，具体如图所示</p>
-<p><img src="1.png" alt="1"></p>
-<p><img src="2.png" alt="2"></p>
-<p>然后，点击 settings，在 Github Pages 标题下，将 source 分支设置为 gh-pages。<br>如图所示</p>
-<p><img src="3.png" alt="3"></p>
-<p>然后访问 {username}.github.io/{项目名}，就可以在线预览项目了。</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Github </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ramda开发命令行工具生成多语言字典</title>
+      <link href="/2019/11/29/ramda%E5%BC%80%E5%8F%91%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E7%94%9F%E6%88%90%E5%A4%9A%E8%AF%AD%E8%A8%80%E5%AD%97%E5%85%B8/"/>
+      <url>/2019/11/29/ramda%E5%BC%80%E5%8F%91%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E7%94%9F%E6%88%90%E5%A4%9A%E8%AF%AD%E8%A8%80%E5%AD%97%E5%85%B8/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>github 地址：<a href="https://github.com/Demian1996/translate">https://github.com/Demian1996/translate</a></p></blockquote><h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>命令行工具 translate，给定中文字典，生成 google 翻译后的多语言文件</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">translate -f zh-CN.json -l en/ja</span><br></pre></td></tr></table></figure><p>通过该命令生成多语言文件</p><span id="more"></span><h2 id="模块依赖"><a href="#模块依赖" class="headerlink" title="模块依赖"></a>模块依赖</h2><ul><li>命令行工具<code>commander</code></li><li>请求库<code>request</code></li><li>函数库<code>ramda</code></li></ul><h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><h4 id="目录总览"><a href="#目录总览" class="headerlink" title="目录总览"></a>目录总览</h4><p><img src="1.png" alt="1"></p><p>bin 是业务逻辑处理文件</p><p>package.json 配置依赖</p><h4 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h4><p>首先在<code>package.json</code>的文件中配置<code>bin</code>，指定文件路径和对应的命令名:</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;bin&quot;</span>: &#123;</span><br><span class="line">  <span class="attr">&quot;translate&quot;</span>: <span class="string">&quot;./bin/index.js&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>然后在 bin 文件夹下新建入口文件 index.js，在文件首行配置</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br></pre></td></tr></table></figure><p>这一行是指定使用 node 执行脚本文件</p><p>然后执行命令<code>npm link</code>，就可以全局使用 translate 命令了。</p><h4 id="参数解析"><a href="#参数解析" class="headerlink" title="参数解析"></a>参数解析</h4><p>使用模块 Commander 解析命令行参数：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">commander.option(<span class="string">&#x27;-f --file &lt;filename&gt;&#x27;</span>, <span class="string">&#x27;translate file&#x27;</span>, callback);</span><br><span class="line">commander.option(<span class="string">&#x27;-l --languages [languages]&#x27;</span>, <span class="string">&#x27;languages&#x27;</span>, <span class="string">&#x27;en&#x27;</span>);</span><br><span class="line">commander.parse(process.argv);</span><br></pre></td></tr></table></figure><p>通过<code>-f</code>指定中文字典文件，通过<code>-l</code>指定目标语言，默认翻译为英文。<code>callback</code>主要是判断文件是否存在若不存在则返回 null，存在则返回 json 对象。后续可以通过 commander.file 获取 json 对象。</p><h4 id="流程处理"><a href="#流程处理" class="headerlink" title="流程处理"></a>流程处理</h4><p>业务逻辑如下：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> generateDictionary = R.pipe(getLanguageArray, fetchTranslateApi, mapTranslation, generateFile);</span><br><span class="line">generateDictionary();</span><br></pre></td></tr></table></figure><p>即获取目标语言数组-&gt;爬取 google 翻译 api-&gt;从返回值中筛选出翻译值-&gt;生成目标语言的 json 文件。</p><p>详细流程见源码</p>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
-        <category>工程化</category>
+          
+          <category> 前端 </category>
+          
+          <category> 工具开发 </category>
+          
       </categories>
-      <tags>
-        <tag>Github</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【基于Git hooks搭建前端工作流系列】二、使用js实现代码语法检测</title>
-    <url>/2021/06/18/%E3%80%90%E5%9F%BA%E4%BA%8EGit%20hooks%E6%90%AD%E5%BB%BA%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%B3%BB%E5%88%97%E3%80%91%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8js%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81%E8%AF%AD%E6%B3%95%E6%A3%80%E6%B5%8B/</url>
-    <content><![CDATA[<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>这是<code>基于Git hooks搭建前端工作流系列</code>的第二篇文章，主要介绍如何使用<code>js</code>实现<code>git</code>脚本文件，完成代码语法检测功能。</p>
-<p>整个系列文章的目录如下：<br>一、方案选型：介绍现在主流的自动化方案。<br>二、使用 <code>js</code> 实现代码语法检测：介绍如何利用 <code>nodejs api</code> 做<code>文件 diff</code> 和<code>代码检测</code>。<br>三、引入插件化，集成和定制更多自动化功能：介绍如何将原来的脚本文件进行插件化，方便拓展功能和切换模板。</p>
-<h2 id="二、脚本解释器简介"><a href="#二、脚本解释器简介" class="headerlink" title="二、脚本解释器简介"></a>二、脚本解释器简介</h2><p>以<code>git</code>提供的默认脚本文件<code>pre-commit.sample</code>的首行代码为例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/sh</span><br></pre></td></tr></table></figure>
-
-<p>这行代码用到了<code>Shebang</code>的概念，<code>wiki</code>给出了如下的介绍：</p>
-<blockquote>
-<p>在计算领域中，Shebang（也称为 Hashbang）是一个由井号和叹号构成的字符序列#!，其出现在文本文件的第一行的前两个字符。 在文件中存在 Shebang 的情况下，类 Unix 操作系统的程序加载器会分析 Shebang 后的内容，将这些内容作为解释器指令，并调用该指令，并将载有 Shebang 的文件路径作为该解释器的参数。</p>
-</blockquote>
-<p>从上面的描述可以看出，程序加载器会根据<code>Shebang</code>使用不同的解释器。所以我们开发<code>node</code>脚本时，可以在文件的头部增加对应的指令调用<code>node</code>解释器，如下所示：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/env node</span><br></pre></td></tr></table></figure>
-
-<p>以打印<code>Hello World</code>为例，我们先新建一个<code>node</code>脚本，命名为 <code>test</code>。将其设置为可执行权限，首行暂时不加<code>#!/usr/bin/env node</code>。此时在 shell 文件中执行 test 文件，会发现执行错误。</p>
-<p><img src="2.png" alt="错误脚本执行展示"></p>
-<p>这就是因为不加<code>#!/usr/bin/env node</code>，识别不了<code>js</code>的语法。然后我们加上<code>#!/usr/bin/env node</code>再试试：</p>
-<p><img src="3.png" alt="正确脚本执行展示"></p>
-<p>之所以使用<code>/usr/bin/env</code>，是因为不同用户的<code>node</code>解释器会安在不同的目录中，而<code>/usr/bin/env</code>会帮助我们去用户的<code>PATH</code>中依次查找<code>node</code>解释器的路径。</p>
-<h2 id="三、编写-node-版本的语法检测钩子"><a href="#三、编写-node-版本的语法检测钩子" class="headerlink" title="三、编写 node 版本的语法检测钩子"></a>三、编写 node 版本的语法检测钩子</h2><h3 id="1、文件-diff，列出已修改的文件"><a href="#1、文件-diff，列出已修改的文件" class="headerlink" title="1、文件 diff，列出已修改的文件"></a>1、文件 diff，列出已修改的文件</h3><p>在<code>shell</code>中可以通过以下命令，查看暂存区修改的文件：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">// diff-filter：添加 (A), 赋值 (C), 删除 (D), 修改 (M), 重命名 (R)</span><br><span class="line">git diff --cached --name-only --diff-filter=ACMR</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>--cached</code>：显示暂存区(已 add 但未 commit 的文件)和最后一次 commit ( HEAD )之间的所有不相同文件的增删改。</li>
-<li><code>--name-only</code>：只显示名称。</li>
-<li><code>--diff-filter=ACMR</code>：过滤掉已删除的文件，这些文件不需要做语法检测。</li>
-</ul>
-<p>结合<code>node</code>的<code>api</code>，可以通过以下代码段，手动执行<code>shell</code>命令获取需要进行语法检测的文件名列表。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; exec &#125; = <span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getDiffFileList</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    exec(<span class="string">&#x27;git diff --cached --name-only --diff-filter=ACMR&#x27;</span>, <span class="function">(<span class="params">error, stdout</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (error) &#123;</span><br><span class="line">        reject(<span class="string">`exec error: <span class="subst">$&#123;error&#125;</span>`</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      resolve(stdout.split(<span class="string">&#x27;\n&#x27;</span>).filter(<span class="function">(<span class="params">diffFile</span>) =&gt;</span> <span class="regexp">/(\.js|\.jsx|\.ts|\.tsx)(\n|$)/gi</span>.test(diffFile)));</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getDiffFileList().then(<span class="built_in">console</span>.log);</span><br></pre></td></tr></table></figure>
-
-<p><code>demo</code>仓库的文件修改状况如下所示：</p>
-<p><img src="7.png" alt="result"></p>
-<p>执行<code>shell</code>命令后的打印结果如下：</p>
-<p><img src="6.png" alt="diff"></p>
-<h3 id="2、eslint-检测文件"><a href="#2、eslint-检测文件" class="headerlink" title="2、eslint 检测文件"></a>2、eslint 检测文件</h3><p><a href="https://eslint.org/docs/developer-guide/nodejs-api#eslint-class">Eslint</a>提供了<code>lintFiles</code>方法检测文件，我们将从上面程序中获取到的文件数组传给该方法，即可调用<code>eslint</code>进行语法检测。代码如下：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; ESLint &#125; = <span class="built_in">require</span>(<span class="string">&#x27;eslint&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>调用eslint api</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">lintFiles</span>(<span class="params">fileList</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> eslint = <span class="keyword">new</span> ESLint();</span><br><span class="line">  <span class="keyword">return</span> eslint.lintFiles(fileList);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description </span>整合并打印结果</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">output</span>(<span class="params">resultList</span>) </span>&#123;</span><br><span class="line">  resultList.forEach(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (result.messages &amp;&amp; result.messages.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="built_in">console</span>.error(<span class="string">`ESLint has found problems in file: <span class="subst">$&#123;result.filePath&#125;</span>`</span>);</span><br><span class="line">      result.messages.forEach(<span class="function">(<span class="params">msg</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (msg.severity === <span class="number">2</span>) &#123;</span><br><span class="line">          <span class="built_in">console</span>.error(<span class="string">`Error: <span class="subst">$&#123;msg.message&#125;</span> in Line <span class="subst">$&#123;msg.line&#125;</span> Column <span class="subst">$&#123;msg.column&#125;</span>`</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="built_in">console</span>.warn(<span class="string">`Warning: <span class="subst">$&#123;msg.message&#125;</span> in Line <span class="subst">$&#123;msg.line&#125;</span> Column <span class="subst">$&#123;msg.column&#125;</span>`</span>);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getDiffFileList().then(lintFiles).then(output);</span><br></pre></td></tr></table></figure>
-
-<p>最终打印结果如下：<br><img src="8.png" alt="result"></p>
-<h3 id="3、增加-Shebang"><a href="#3、增加-Shebang" class="headerlink" title="3、增加 Shebang"></a>3、增加 Shebang</h3><p>首先，我们新建一份与<code>git hooks</code>的<code>pre-commit</code>钩子同名的<code>pre-commit</code>文件，注意该文件没有后缀。然后在<code>shell</code>中调用<code>chmod 777 pre-commit</code>将该文件设置为可执行文件，并在首行增加<code>#!/usr/bin/env node</code>。最后，我们将这段加了<code>#!/usr/bin/env node</code>的脚本拷贝到<code>git</code>仓库的<code>.git/hooks</code>目录中，就算大功告成了。<br>我们之后的每次提交，<code>git</code>都会触发该脚本对我们改动的文件进行语法检测。<br>最终的代码见 gist: <a href="https://gist.github.com/Demian1996/d0dc27d08b38943cdb4eea212690c363#file-pre-commit">语法检测脚本</a></p>
-<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>本文主要介绍了如何使用<code>js</code>实现<code>git</code>脚本文件，完成代码语法检测功能。同理，我们也可以使用<code>js</code>实现<code>commit 信息检测</code>，<code>npm packages 协议风险检测</code>等功能。<br>由于笔者团队没有使用<code>husky</code>，而是采用上述的<strong>脚本文件 + vscode 插件注入的方式</strong>（详细见该系列文章的第一篇）。随着业务的不断迭代，后续的开发者在维护脚本文件时，出现了维护困难、拓展困难的问题。在下一篇文章中，笔者将介绍如何使用插件化，来隔离<strong>开发功能插件</strong>和<strong>组装 git 钩子业务</strong>的关注点，并通过 vscode 插件实现动态切换当前项目需要使用的 git 钩子。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://juejin.cn/post/6865101730166767623">用「增量」思想提升代码检查和打包构建的效率</a></li>
-</ul>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> Ramda </tag>
+            
+            <tag> 函数式编程 </tag>
+            
+            <tag> 命令行工具 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>mobx初探</title>
+      <link href="/2019/04/23/mobx%E5%88%9D%E6%8E%A2/"/>
+      <url>/2019/04/23/mobx%E5%88%9D%E6%8E%A2/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>本文是笔者在看了 frontendmaster 的状态管理课程之后，对 mobx 进行的初步学习的总结。</p><h2 id="二、Mobx-简介"><a href="#二、Mobx-简介" class="headerlink" title="二、Mobx 简介"></a>二、Mobx 简介</h2><p>mobx 是社区内使用的较为常见的一种状态管理库，mobx 官网称其</p><blockquote><p>通过透明的函数响应式编程(transparently applying functional reactive programming - TFRP)使得状态管理变得简单和可扩展</p></blockquote><p>mobx 主要有以下几个核心特性：</p><ul><li>Observable State（可观察状态）</li><li>Computed Values（计算属性）</li><li>Reactions（反应，完成页面渲染、日志打印）</li><li>Actions（动作）</li></ul><p>以下介绍将结合部分 mobx 代码，代码地址： <a href="https://jsbin.com/demelo/19/edit?html,js,console,output">示例代码</a></p><span id="more"></span><p>详细代码如下:</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// html</span></span><br><span class="line">&lt;div id=<span class="string">&quot;console&quot;</span> /&gt;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// js</span></span><br><span class="line"><span class="keyword">const</span> &#123; computed, observable, autorun &#125; = mobx;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  @observable firstName;</span><br><span class="line">  @observable secondName;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params">firstName, secondName</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.firstName = firstName;</span><br><span class="line">    <span class="built_in">this</span>.secondName = secondName;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @computed <span class="keyword">get</span> <span class="title">fullName</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.firstName + <span class="string">&#x27; &#x27;</span> + <span class="built_in">this</span>.secondName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> wdz = <span class="keyword">new</span> Person(<span class="string">&#x27;Demian&#x27;</span>, <span class="string">&#x27;Wang&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> greet = observable.box(<span class="string">&#x27;good morning! &#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> render = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">&#x27;console&#x27;</span>).innerText = greet + wdz.fullName;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 动态更新dom内容</span></span><br><span class="line">autorun(render);</span><br></pre></td></tr></table></figure><p>此时网页 ui 为：</p><p><img src="1.png" alt="1"></p><h3 id="1-Computed-Values"><a href="#1-Computed-Values" class="headerlink" title="1.Computed Values"></a>1.Computed Values</h3><p>首先介绍一下计算属性。在上述代码中 fullName 就是计算属性。相信用过 vue 的对这个很熟悉。当我们在命令行手动修改 wdz 的 firstName 时，wdz 的 fullName 会自动更新</p><p><img src="2.png" alt="2"></p><p>此时网页 ui 也发生了实时的变化：</p><p><img src="3.png" alt="3"></p><p>可见，computed 属性可以响应 observable 属性的变化。</p><p>值得一提的是，在 react 的 render 函数中，如果存在很多 props 的计算的话，可以使用 get 语法的形式将这部分逻辑抽离：</p><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">get</span> <span class="title">fullName</span>() &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">this</span>.props.firstName + <span class="built_in">this</span>.props.secondName;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.fullName&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这里的 fullName 和可计算属性类似，依据传入的 props 属性动态变化。</p><h3 id="2-Observable-State"><a href="#2-Observable-State" class="headerlink" title="2.Observable State"></a>2.Observable State</h3><p>通过在类属性前加上@observable，为该属性添加了可观察功能。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; observable &#125; <span class="keyword">from</span> <span class="string">&#x27;mobx&#x27;</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  @observable firstName;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params">firstName</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.firstName = firstName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>使用装饰器语法很简洁的使得 name 拥有了可观察的功能。</p><p>那么 Observable 有什么作用呢？</p><p>见以下代码：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greet = observable.box(<span class="string">&#x27;good morning! &#x27;</span>);</span><br></pre></td></tr></table></figure><p>我们为 greet 返回一个 observable 包装过的值，首先我们试着直接改变 greet 的值</p><p><img src="4.png" alt="4"></p><p>但是，此时网页 ui 没有实时变化：</p><p><img src="5.png" alt="5"></p><p>可见，原始类型在包装过之后，<strong>直接改变引用值不能触发页面动态更新</strong>，感兴趣的读者可以点击上面的链接打印出 greet 的属性，就能很直观的认识到 observable 的作用。</p><p>以下是简化版的 observable：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单的observable</span></span><br><span class="line"><span class="keyword">const</span> observable = <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    value,</span><br><span class="line">    <span class="function"><span class="title">get</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;get&#x27;</span>, <span class="built_in">this</span>.value);</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.value;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="title">set</span>(<span class="params">newValue</span>)</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;set&#x27;</span>, newValue);</span><br><span class="line">      <span class="comment">// 向全局通知该数据更新</span></span><br><span class="line">      report(<span class="built_in">this</span>.value, newValue);</span><br><span class="line">      <span class="built_in">this</span>.value = newValue;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// reactive代码</span></span><br><span class="line">eventEmitter.on(<span class="string">&#x27;report&#x27;</span>, <span class="function">(<span class="params">oldValue, newValue</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(oldValue, <span class="string">&#x27;===&gt;&#x27;</span>, newValue);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通知给全局</span></span><br><span class="line"><span class="keyword">const</span> report = <span class="function">(<span class="params">oldValue, newValue</span>) =&gt;</span> &#123;</span><br><span class="line">  eventEmitter.emit(<span class="string">&#x27;report&#x27;</span>, oldValue, newValue);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>主要是使用 value 值存储原始类型，使用 get 获取 value 值，使用 set 更新 value 值。值得注意的是，在更新数据以前，set 方法会根据一定的配置，选择是否向全局发送更新事件，相应的一些 computed 的属性会接收到该事件。</p><h3 id="3-Reactions"><a href="#3-Reactions" class="headerlink" title="3.Reactions"></a>3.Reactions</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> render = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">&#x27;console&#x27;</span>).innerText = greet + wdz.fullName;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 动态更新dom内容</span></span><br><span class="line">autorun(render);</span><br></pre></td></tr></table></figure><p>当 observable 数据变化后，页面会自动更新 ui。</p><h2 id="三、mobx-实战-实现一个-todoList"><a href="#三、mobx-实战-实现一个-todoList" class="headerlink" title="三、mobx 实战-实现一个 todoList"></a>三、mobx 实战-实现一个 todoList</h2><p>注：由于 create-react-app 创建的项目默认不能使用装饰器语法，所以笔者暴力的 eject 并安装了相应的 babel 配置。</p><p>以下是 todoList 的项目结构：</p><p><img src="6.png" alt="6"></p><p>最终实现效果：</p><p><img src="7.png" alt="7"></p><p>项目地址：<a href="https://github.com/Demian1996/todo/tree/mobx-todo">todolist</a></p><p>当我们使用 mobx 维护状态时，store 不像 redux 那样是全局唯一的，我们可以细粒度地维护一个个数据模型。在中小型的项目中，mobx 的 store 轻便简洁，使用起来很顺滑。</p><p>项目中用到的 mobx 特性：</p><h3 id="1-observable"><a href="#1-observable" class="headerlink" title="1.observable"></a>1.observable</h3><p>主要维护 todolist 的基本状态：待办列表 todolist、新建待办的内容 itemContent 和当前筛选类型 filterType</p><p><img src="8.png" alt="8"></p><h3 id="2-computed"><a href="#2-computed" class="headerlink" title="2.computed"></a>2.computed</h3><p>根据当前筛选器的类型，返回对应的 todoList。</p><p><img src="9.png" alt="9"></p><h3 id="3-reactions"><a href="#3-reactions" class="headerlink" title="3.reactions"></a>3.reactions</h3><p>筛选器状态变化后，响应式地打印出当前筛选器的状态。</p><p><img src="10.png" alt="10"></p><h3 id="4-actions"><a href="#4-actions" class="headerlink" title="4.actions"></a>4.actions</h3><p>点击筛选器后的状态切换和异步事件。这里需要使用 runInAction 包装异步函数，这样才可以完成响应式的更新数据。</p><p><img src="11.png" alt="11"></p><h2 id="四、Mobx-vs-Redux"><a href="#四、Mobx-vs-Redux" class="headerlink" title="四、Mobx vs Redux"></a>四、Mobx vs Redux</h2><p>两者都是优秀的状态管理工具，都可以帮助开发者完成业务开发。所以抛开业务场景谈论工具优劣是无意义的，笔者这里只是简单列出两者的区别。</p><h3 id="修改数据"><a href="#修改数据" class="headerlink" title="修改数据"></a>修改数据</h3><p><img src="12.png" alt="12"></p><h3 id="中间件"><a href="#中间件" class="headerlink" title="中间件"></a>中间件</h3><p><img src="13.png" alt="13"></p><h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>笔者只是介绍了 mobx 的冰山一角，其作为一种响应式的状态管理库，在中小型项目中有着高效率的表现。响应式的写法、细粒度的 store 管理都体现了 mobx 的灵活性。</p>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
-        <category>工程化</category>
+          
+          <category> 前端 </category>
+          
+          <category> 状态管理 </category>
+          
       </categories>
-      <tags>
-        <tag>Git</tag>
-        <tag>工程化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>封装useModal复用公共弹窗组件</title>
-    <url>/2020/08/09/%E5%B0%81%E8%A3%85useModal%E5%A4%8D%E7%94%A8%E5%85%AC%E5%85%B1%E5%BC%B9%E7%AA%97%E7%BB%84%E4%BB%B6/</url>
-    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在常规的业务开发中，经常会用到 Modal 组件。当笔者在开发实际项目时，业务需求要求我在同一个页面分别使用 2-3 种弹窗。理论来说此时只需要使用一个 Modal 组件，定制不同内容即可。但是痛苦常常来源于生活，由于团队人员变动、公共组件管理不够规范、重复造轮子等各种原因，我们往往需要接入各种不同种类的弹窗组件，比如在下面的代码中，我使用的 ExitModal 和 DeleteModal 就出自不同人之手：</p>
-<span id="more"></span>
-
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> App = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [isShowExitModal, setIsShowExitModal] = useState(<span class="literal">false</span>);</span><br><span class="line">  <span class="keyword">const</span> [isShowDeleteModal, setIsShowDeleteModal] = useState(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> setIsShowExitModal(true)&#125;&gt;显示退出弹窗<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> setIsShowDeleteModal(true)&#125;&gt;显示删除弹窗<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">ExitModal</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">        <span class="attr">visible</span>=<span class="string">&#123;isShowExitModal&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">        <span class="attr">onOk</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="xml">          console.log(&#x27;成功退出&#x27;);</span></span><br><span class="line"><span class="xml">          setIsShowExitModal(false);</span></span><br><span class="line"><span class="xml">        &#125;&#125;</span></span><br><span class="line"><span class="xml">        onCancel=&#123;() =&gt; setIsShowExitModal(false)&#125;</span></span><br><span class="line"><span class="xml">      /&gt;</span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">DeleteModal</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">        <span class="attr">visible</span>=<span class="string">&#123;isShowDeleteModal&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">        <span class="attr">onOk</span>=<span class="string">&#123;()</span> =&gt;</span> console.log(&#x27;成功删除&#x27;)&#125;</span></span><br><span class="line"><span class="xml">        onCancel=&#123;() =&gt; setIsShowDeleteModal(false)&#125;</span></span><br><span class="line"><span class="xml">      /&gt;</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>该组件的状态依赖如下所示：</p>
-<p><img src="1.png" alt="1"></p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>可以看到，在现有场景下，我们封装业务组件如果以这种模式处理，往往会面临以下问题：</p>
-<ul>
-<li>业务组件需要维护和直接依赖 Modal 组件的显隐状态，Modal 组件越多，冗余的 ui 状态越多</li>
-<li>如果 Modal 组件在封装时没有使用 createPortal 的 API，Modal 组件就会挂载到业务组件的真实 dom 中，影响业务组件的 dom 树</li>
-</ul>
-<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>首先我们期望的是在优化之后能够保证业务组件和 Modal 组件的状态脱钩，业务组件仅仅需要调用第三方提供的 show 方法调起弹窗，后续的操作都交给第三方处理。其次，我们期望在优化之后，无论 Modal 组件之前是怎么设计的，业务方调用时都会将其挂载到 body 下，不影响自身的 dom 结构。</p>
-<p>因此，笔者封装了 useModal 这个 hook，接受 Modal 组件，返回统一的 Modal 代理。由代理解决上面的两个问题。具体使用如下：</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> App = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> exitModal = useModal(ExitModal);</span><br><span class="line">  <span class="keyword">const</span> deleteModal = useModal(DeleteModal);</span><br><span class="line">  <span class="keyword">const</span> onShowExitModal = useCallback(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    exitModal.show(&#123;</span><br><span class="line">      <span class="attr">onOk</span>: <span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;退出成功&#x27;</span>),</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;, [exitModal]);</span><br><span class="line">  <span class="keyword">const</span> onShowDeleteModal = useCallback(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    deleteModal.show(&#123;</span><br><span class="line">      <span class="attr">onOk</span>: <span class="function">() =&gt;</span> <span class="built_in">console</span>.log(<span class="string">&#x27;删除成功&#x27;</span>),</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;, [deleteModal]);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">onClick</span>=<span class="string">&#123;onShowExitModal&#125;</span>&gt;</span>显示退出弹窗<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">onClick</span>=<span class="string">&#123;onShowDeleteModal&#125;</span>&gt;</span>显示删除弹窗<span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>此时，业务组件只需要依赖不同 modal 实例的代理，调用代理的 show 方法调起弹窗，不需要手动修改 visible 状态和在 renderTree 中插入 Modal 组件。</p>
-<h2 id="UseModal-详解"><a href="#UseModal-详解" class="headerlink" title="UseModal 详解"></a>UseModal 详解</h2><p>使用 useModal 后的 uml 图如下所示：</p>
-<p><img src="2.png" alt="2"></p>
-<p>useModal 接受实现了 Modal 接口的 React 组件，然后返回一个代理，该代理提供了 show 和 destroy 方法。窗口的 ui 状态和组件挂载逻辑交由代理控制，业务组件只需要知道代理的接口，即可实现窗口管理。</p>
-<p>下面介绍一下 useModal 实现 show 和 destroy 的基本原理：</p>
-<p>useModal 会维护具体的窗口实例的 visible 状态和真实的 Modal 组件，在业务调用 show 方法时，useModal 会调用 ReactDOM 的 render 方法将 Modal 组件挂载到 body 的 dom 下，在业务调用 destroy 方法是 ReactDOM 的 unmountComponentAtNode 方法卸载状态。<br>具体逻辑如下：</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> unmount = useCallback(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> result = ReactDOM.unmountComponentAtNode(mountNode);</span><br><span class="line">  <span class="keyword">if</span> (result &amp;&amp; mountNode.parentNode) &#123;</span><br><span class="line">    mountNode.parentNode.removeChild(mountNode);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, [mountNode]);</span><br><span class="line"><span class="keyword">const</span> render = useCallback(</span><br><span class="line">  <span class="function">(<span class="params">modalProps: IModalProps</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(mountNode);</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      ReactDOM.render(<span class="xml"><span class="tag">&lt;<span class="name">Modal</span> &#123;<span class="attr">...modalProps</span>&#125;&gt;</span><span class="tag">&lt;/<span class="name">Modal</span>&gt;</span></span>, mountNode);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">  [mountNode]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<h2 id="进一步思考"><a href="#进一步思考" class="headerlink" title="进一步思考"></a>进一步思考</h2><p>当前的 useModal 很好的实现了状态解耦，但是可以看到它给所有 Modal 组件增加了一层约束，即所有弹窗组件都要满足 Modal 这一接口。</p>
-<p>实际业务中，可能会遇到 Modal 组件不符合这一接口的，此时我们可以通过进一步实现 ModalAdapter 等方式解决问题。</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> React </tag>
+            
+            <tag> Mobx </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>React父组件和子组件解耦方案</title>
+      <link href="/2019/03/24/React%E7%88%B6%E7%BB%84%E4%BB%B6%E5%92%8C%E5%AD%90%E7%BB%84%E4%BB%B6%E8%A7%A3%E8%80%A6%E6%96%B9%E6%A1%88/"/>
+      <url>/2019/03/24/React%E7%88%B6%E7%BB%84%E4%BB%B6%E5%92%8C%E5%AD%90%E7%BB%84%E4%BB%B6%E8%A7%A3%E8%80%A6%E6%96%B9%E6%A1%88/</url>
+      
+        <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>业务中经常会遇到抽离组件的情况，那么父组件和子组件之间该怎么解耦呢？</p><h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><p>比如实现一个 List 组件：</p><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Item = <span class="function">(<span class="params">&#123; text &#125;</span>) =&gt;</span> (<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;text&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">list</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.state.list.map(<span class="function"><span class="params">x</span> =&gt;</span> <span class="xml"><span class="tag">&lt;<span class="name">Item</span> <span class="attr">text</span>=<span class="string">&#123;x&#125;</span> /&gt;</span></span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><p>我们封装父组件经常会直接用到这种方法，但是如果该父组件是一个公共组件，那么当我们在外部引用它时，它对于我们而言其实是一个黑盒。父组件和子组件通过 list 牢牢的耦和在了一起。</p><span id="more"></span><h2 id="解耦方案"><a href="#解耦方案" class="headerlink" title="解耦方案"></a>解耦方案</h2><h3 id="一、使用-render-props"><a href="#一、使用-render-props" class="headerlink" title="一、使用 render props"></a>一、使用 render props</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">list</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.props.children(<span class="built_in">this</span>.state.list);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-- jsx</span><br><span class="line"></span><br><span class="line">&lt;List&gt;</span><br><span class="line">  &#123;<span class="function">(<span class="params">list</span>) =&gt;</span> list.map(<span class="function"><span class="params">x</span> =&gt;</span> <span class="xml"><span class="tag">&lt;<span class="name">Item</span> <span class="attr">text</span>=<span class="string">&#123;x&#125;</span> /&gt;</span></span>)&#125;</span><br><span class="line">&lt;/List&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>可以看到，通过 render props 的设计实现了父组件和子组件之间的解耦。</p><h3 id="二、Compound-Component"><a href="#二、Compound-Component" class="headerlink" title="二、Compound Component"></a>二、Compound Component</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">list</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      React.Children.map(</span><br><span class="line">        <span class="built_in">this</span>.props.children,</span><br><span class="line">        <span class="function">(<span class="params">child, i</span>) =&gt;</span> React.cloneElement(child, &#123;</span><br><span class="line">          <span class="attr">text</span>: state.list[i]</span><br><span class="line">        &#125;)</span><br><span class="line">      );</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">--jsx</span><br><span class="line"></span><br><span class="line">&lt;List&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">Item</span> /&gt;</span></span></span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">Item</span> /&gt;</span></span></span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">Item</span> /&gt;</span></span></span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">Item</span> /&gt;</span></span></span><br><span class="line">&lt;/List&gt;</span><br></pre></td></tr></table></figure><p>可以看到 compound component 也能实现父子组件解耦，只是在这里可能不是那么完美。其实 compound component 的应用远不止如此，读者可以自行挖掘。😃</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>compound component 和 render props 均实现了父子组件的解耦，并且父组件对于使用者来说也不再是一个黑盒。</p><h3 id="引申"><a href="#引申" class="headerlink" title="引申"></a>引申</h3><p>将父子组件解耦后，父子组件之间只需要接口达成一致便能完成使用。此时若将单元测试覆盖于测试用例，具体又有什么便利之处呢？👾</p>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
-        <category>设计</category>
+          
+          <category> 前端 </category>
+          
+          <category> 设计 </category>
+          
       </categories>
-      <tags>
-        <tag>React</tag>
-        <tag>React Hook</tag>
-        <tag>组件设计</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>配置项目ts和hook的eslint约束</title>
-    <url>/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/</url>
-    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。</p>
-<p>鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见<a href="https://github.com/AlloyTeam/eslint-config-alloy">eslint-config-alloy</a></p>
-<span id="more"></span>
-
-<h2 id="第一步：安装-更新-Vscode-插件-Eslint"><a href="#第一步：安装-更新-Vscode-插件-Eslint" class="headerlink" title="第一步：安装/更新 Vscode 插件 Eslint"></a>第一步：安装/更新 Vscode 插件 Eslint</h2><p>vscode 中更新 Eslint 插件到最新版，保证对 typescript-eslint 的支持。</p>
-<p><img src="1.png" alt="1"></p>
-<h2 id="第二步：安装-Eslint-config-alloy"><a href="#第二步：安装-Eslint-config-alloy" class="headerlink" title="第二步：安装 Eslint-config-alloy"></a>第二步：安装 Eslint-config-alloy</h2><p>AlloyTeam ESLint：是一套先进的适用于 React/Vue/Typescript 项目的 ESLint 配置规范，而且也是配置个性化 ESLint 规则的最佳参考。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install --save-dev eslint typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-config-alloy</span><br></pre></td></tr></table></figure>
-
-<p>安装完毕后，在.eslintrc.js 文件中新增配置如下:</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="attr">extends</span>: [<span class="string">&#x27;alloy&#x27;</span>, <span class="string">&#x27;alloy/react&#x27;</span>, <span class="string">&#x27;alloy/typescript&#x27;</span>],</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>此时项目已经支持对 ts 的 eslint 限制， 可以通过新建一个 index.tsx，在其中新建变量 var，此时 eslint 会进行报错：</p>
-<p><img src="2.png" alt="2"></p>
-<blockquote>
-<p>ps: 如果装完后，vscode 没有成功给出提示。先打开 vscode 命令行，在“终端”中选择 Eslint，查看具体错误。如果是报找不到包的错误，很可能是之前安装过上面的某个包，版本和现在安装的其他包不兼容。可以试试先将上面的所有包全部 uninstall，再重新 install。</p>
-</blockquote>
-<h2 id="第三步：安装-hook-规范"><a href="#第三步：安装-hook-规范" class="headerlink" title="第三步：安装 hook 规范"></a>第三步：安装 hook 规范</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install --save-dev eslint-plugin-react-hooks</span><br></pre></td></tr></table></figure>
-
-<p>安装完毕后，在.eslintrc.js 文件中新增</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">extends</span>: [</span><br><span class="line">    ...,</span><br><span class="line">    <span class="string">&#x27;plugin:react-hooks/recommended&#x27;</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<p>这里我们使用的是 plugin 提供的推荐配置，想要自定义配置可自行参照官方文档，在 rules 中进行配置。</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> React </tag>
+            
+            <tag> 组件设计 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>react中减少render臃肿的方法</title>
+      <link href="/2019/03/07/react%E4%B8%AD%E5%87%8F%E5%B0%91render%E8%87%83%E8%82%BF%E7%9A%84%E6%96%B9%E6%B3%95/"/>
+      <url>/2019/03/07/react%E4%B8%AD%E5%87%8F%E5%B0%91render%E8%87%83%E8%82%BF%E7%9A%84%E6%96%B9%E6%B3%95/</url>
+      
+        <content type="html"><![CDATA[<p>最近看了mobx的相关知识，对computed属性十分喜欢。</p><p>想起在日常的项目开发中，react经常需要在render函数的开始部分进行一些props属性的计算，再将计算值用于渲染。一般会有以下画面：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="built_in">this</span>.props;</span><br><span class="line">    <span class="keyword">const</span> fullName = firstName + secondName;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;fullName&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><span id="more"></span><p>当业务逻辑复杂时可能会造成render函数十分的臃肿。也许我们会进行这样的优化：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  getFullName = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="built_in">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> firstName + secondName;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.getFullName()&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>但是我们实质上寻求的是一种computed的属性，将其封装成函数只是一种曲线救国的手段。<br>直到我在看frontend master的过程中，才发现原来可以使用class的get属性：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">get</span> <span class="title">fullName</span>() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; firstName, secondName &#125; = <span class="built_in">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> firstName + secondName;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.fullName&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>使用get属性实现computed的功能可以减少render函数的臃肿。</p>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
-        <category>工程化</category>
+          
+          <category> 前端 </category>
+          
+          <category> 设计 </category>
+          
       </categories>
-      <tags>
-        <tag>Eslint</tag>
-        <tag>Typescript</tag>
-        <tag>Alloy</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>React父组件和子组件解耦方案</title>
-    <url>/2019/03/24/React%E7%88%B6%E7%BB%84%E4%BB%B6%E5%92%8C%E5%AD%90%E7%BB%84%E4%BB%B6%E8%A7%A3%E8%80%A6%E6%96%B9%E6%A1%88/</url>
-    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>业务中经常会遇到抽离组件的情况，那么父组件和子组件之间该怎么解耦呢？</p>
-<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><p>比如实现一个 List 组件：</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> Item = <span class="function">(<span class="params">&#123; text &#125;</span>) =&gt;</span> (<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;text&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">list</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.state.list.map(<span class="function"><span class="params">x</span> =&gt;</span> <span class="xml"><span class="tag">&lt;<span class="name">Item</span> <span class="attr">text</span>=<span class="string">&#123;x&#125;</span> /&gt;</span></span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><p>我们封装父组件经常会直接用到这种方法，但是如果该父组件是一个公共组件，那么当我们在外部引用它时，它对于我们而言其实是一个黑盒。父组件和子组件通过 list 牢牢的耦和在了一起。</p>
-<span id="more"></span>
-
-<h2 id="解耦方案"><a href="#解耦方案" class="headerlink" title="解耦方案"></a>解耦方案</h2><h3 id="一、使用-render-props"><a href="#一、使用-render-props" class="headerlink" title="一、使用 render props"></a>一、使用 render props</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">list</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.props.children(<span class="built_in">this</span>.state.list);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-- jsx</span><br><span class="line"></span><br><span class="line">&lt;List&gt;</span><br><span class="line">  &#123;<span class="function">(<span class="params">list</span>) =&gt;</span> list.map(<span class="function"><span class="params">x</span> =&gt;</span> <span class="xml"><span class="tag">&lt;<span class="name">Item</span> <span class="attr">text</span>=<span class="string">&#123;x&#125;</span> /&gt;</span></span>)&#125;</span><br><span class="line">&lt;/List&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>可以看到，通过 render props 的设计实现了父组件和子组件之间的解耦。</p>
-<h3 id="二、Compound-Component"><a href="#二、Compound-Component" class="headerlink" title="二、Compound Component"></a>二、Compound Component</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  state = &#123;</span><br><span class="line">    <span class="attr">list</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      React.Children.map(</span><br><span class="line">        <span class="built_in">this</span>.props.children,</span><br><span class="line">        <span class="function">(<span class="params">child, i</span>) =&gt;</span> React.cloneElement(child, &#123;</span><br><span class="line">          <span class="attr">text</span>: state.list[i]</span><br><span class="line">        &#125;)</span><br><span class="line">      );</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">--jsx</span><br><span class="line"></span><br><span class="line">&lt;List&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">Item</span> /&gt;</span></span></span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">Item</span> /&gt;</span></span></span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">Item</span> /&gt;</span></span></span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">Item</span> /&gt;</span></span></span><br><span class="line">&lt;/List&gt;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到 compound component 也能实现父子组件解耦，只是在这里可能不是那么完美。其实 compound component 的应用远不止如此，读者可以自行挖掘。😃</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>compound component 和 render props 均实现了父子组件的解耦，并且父组件对于使用者来说也不再是一个黑盒。</p>
-<h3 id="引申"><a href="#引申" class="headerlink" title="引申"></a>引申</h3><p>将父子组件解耦后，父子组件之间只需要接口达成一致便能完成使用。此时若将单元测试覆盖于测试用例，具体又有什么便利之处呢？👾</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> React </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Create-react-app中使用装饰器语法</title>
+      <link href="/2019/03/01/Create-react-app%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%A3%85%E9%A5%B0%E5%99%A8%E8%AF%AD%E6%B3%95/"/>
+      <url>/2019/03/01/Create-react-app%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%A3%85%E9%A5%B0%E5%99%A8%E8%AF%AD%E6%B3%95/</url>
+      
+        <content type="html"><![CDATA[<h3 id="背景："><a href="#背景：" class="headerlink" title="背景："></a>背景：</h3><p>想要在 create-react-app 中使用 mobx，因为装饰器模式看起来简单，所以想让 create-react-app 支持装饰器语法。</p><h3 id="项目搭建"><a href="#项目搭建" class="headerlink" title="项目搭建"></a>项目搭建</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create-react-app test-decorator</span><br><span class="line">npm install -s mobx-react mobx</span><br></pre></td></tr></table></figure><p>安装完毕后，若直接在 class 中使用 mobx 的@observer 语法</p><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;@observer&#125; <span class="keyword">from</span> <span class="string">&#x27;mobx-react&#x27;</span>;</span><br><span class="line">@observer</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br></pre></td></tr></table></figure><p>此时会报编译错误</p><span id="more"></span><p><img src="1551331520473.png" alt="1551331520473"></p><p>所以需要使用 babel 让编译时能支持装饰器语法。</p><blockquote><p>ps：create-react-app 可以使用其他方式支持装饰器语法，这里只提供一种简单粗暴的形式-弹出。</p></blockquote><h3 id="弹出-create-react-app-的项目"><a href="#弹出-create-react-app-的项目" class="headerlink" title="弹出 create-react-app 的项目"></a>弹出 create-react-app 的项目</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run eject</span><br></pre></td></tr></table></figure><p>发现出了点小意外:</p><p>mobx 不应该先装，<code>eject得在工作区没有改动时启用，不然会弹出失败。</code></p><p>于是先提交工作区的改动</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -a -m &quot;init&quot;</span><br></pre></td></tr></table></figure><p>然后再次 eject</p><h3 id="安装-babel-plugin-proposal-decorators"><a href="#安装-babel-plugin-proposal-decorators" class="headerlink" title="安装@babel/plugin-proposal-decorators"></a>安装<code>@babel/plugin-proposal-decorators</code></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev @babel/plugin-proposal-decorators</span><br></pre></td></tr></table></figure><p>在<code>package.json</code>中加上</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;plugins&quot;</span>: [<span class="string">&quot;@babel/plugin-proposal-decorators&quot;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>此时运行报错</p><p><img src="1551335060987.png" alt="1551335060987"></p><p>加上<code>decoratorsBeforeExport</code>：</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">&quot;@babel/plugin-proposal-decorators&quot;</span>, &#123; <span class="attr">&quot;decoratorsBeforeExport&quot;</span>: <span class="literal">true</span> &#125;],</span><br></pre></td></tr></table></figure><p>报错：</p><p><img src="1551335316388.png" alt="1551335316388"></p><p>改成</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;plugins&quot;</span>: [</span><br><span class="line">    [<span class="string">&quot;@babel/plugin-proposal-decorators&quot;</span>, &#123; <span class="attr">&quot;legacy&quot;</span>: <span class="literal">true</span> &#125;],</span><br><span class="line">    [<span class="string">&quot;@babel/plugin-proposal-class-properties&quot;</span>, &#123; <span class="attr">&quot;loose&quot;</span>: <span class="literal">true</span> &#125;]</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>成功!!!</p><p>猜测和我的下面的写法有关，装饰器挂在头部怪怪的</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@a</span><br><span class="line">class B</span><br></pre></td></tr></table></figure><p>好像大佬们认为下面这样更好一点</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> @a <span class="class"><span class="keyword">class</span> <span class="title">B</span></span></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
-        <category>设计</category>
+          
+          <category> 前端 </category>
+          
+          <category> 其他 </category>
+          
       </categories>
-      <tags>
-        <tag>React</tag>
-        <tag>组件设计</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mobx初探</title>
-    <url>/2019/04/23/mobx%E5%88%9D%E6%8E%A2/</url>
-    <content><![CDATA[<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>本文是笔者在看了 frontendmaster 的状态管理课程之后，对 mobx 进行的初步学习的总结。</p>
-<h2 id="二、Mobx-简介"><a href="#二、Mobx-简介" class="headerlink" title="二、Mobx 简介"></a>二、Mobx 简介</h2><p>mobx 是社区内使用的较为常见的一种状态管理库，mobx 官网称其</p>
-<blockquote>
-<p>通过透明的函数响应式编程(transparently applying functional reactive programming - TFRP)使得状态管理变得简单和可扩展</p>
-</blockquote>
-<p>mobx 主要有以下几个核心特性：</p>
-<ul>
-<li>Observable State（可观察状态）</li>
-<li>Computed Values（计算属性）</li>
-<li>Reactions（反应，完成页面渲染、日志打印）</li>
-<li>Actions（动作）</li>
-</ul>
-<p>以下介绍将结合部分 mobx 代码，代码地址： <a href="https://jsbin.com/demelo/19/edit?html,js,console,output">示例代码</a></p>
-<span id="more"></span>
-
-<p>详细代码如下:</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// html</span></span><br><span class="line">&lt;div id=<span class="string">&quot;console&quot;</span> /&gt;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// js</span></span><br><span class="line"><span class="keyword">const</span> &#123; computed, observable, autorun &#125; = mobx;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  @observable firstName;</span><br><span class="line">  @observable secondName;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params">firstName, secondName</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.firstName = firstName;</span><br><span class="line">    <span class="built_in">this</span>.secondName = secondName;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @computed <span class="keyword">get</span> <span class="title">fullName</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.firstName + <span class="string">&#x27; &#x27;</span> + <span class="built_in">this</span>.secondName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> wdz = <span class="keyword">new</span> Person(<span class="string">&#x27;Demian&#x27;</span>, <span class="string">&#x27;Wang&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> greet = observable.box(<span class="string">&#x27;good morning! &#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> render = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">&#x27;console&#x27;</span>).innerText = greet + wdz.fullName;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 动态更新dom内容</span></span><br><span class="line">autorun(render);</span><br></pre></td></tr></table></figure>
-
-<p>此时网页 ui 为：</p>
-<p><img src="1.png" alt="1"></p>
-<h3 id="1-Computed-Values"><a href="#1-Computed-Values" class="headerlink" title="1.Computed Values"></a>1.Computed Values</h3><p>首先介绍一下计算属性。在上述代码中 fullName 就是计算属性。相信用过 vue 的对这个很熟悉。当我们在命令行手动修改 wdz 的 firstName 时，wdz 的 fullName 会自动更新</p>
-<p><img src="2.png" alt="2"></p>
-<p>此时网页 ui 也发生了实时的变化：</p>
-<p><img src="3.png" alt="3"></p>
-<p>可见，computed 属性可以响应 observable 属性的变化。</p>
-<p>值得一提的是，在 react 的 render 函数中，如果存在很多 props 的计算的话，可以使用 get 语法的形式将这部分逻辑抽离：</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">get</span> <span class="title">fullName</span>() &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">this</span>.props.firstName + <span class="built_in">this</span>.props.secondName;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.fullName&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里的 fullName 和可计算属性类似，依据传入的 props 属性动态变化。</p>
-<h3 id="2-Observable-State"><a href="#2-Observable-State" class="headerlink" title="2.Observable State"></a>2.Observable State</h3><p>通过在类属性前加上@observable，为该属性添加了可观察功能。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; observable &#125; <span class="keyword">from</span> <span class="string">&#x27;mobx&#x27;</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  @observable firstName;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params">firstName</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.firstName = firstName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用装饰器语法很简洁的使得 name 拥有了可观察的功能。</p>
-<p>那么 Observable 有什么作用呢？</p>
-<p>见以下代码：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> greet = observable.box(<span class="string">&#x27;good morning! &#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>我们为 greet 返回一个 observable 包装过的值，首先我们试着直接改变 greet 的值</p>
-<p><img src="4.png" alt="4"></p>
-<p>但是，此时网页 ui 没有实时变化：</p>
-<p><img src="5.png" alt="5"></p>
-<p>可见，原始类型在包装过之后，<strong>直接改变引用值不能触发页面动态更新</strong>，感兴趣的读者可以点击上面的链接打印出 greet 的属性，就能很直观的认识到 observable 的作用。</p>
-<p>以下是简化版的 observable：</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 简单的observable</span></span><br><span class="line"><span class="keyword">const</span> observable = <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    value,</span><br><span class="line">    <span class="function"><span class="title">get</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;get&#x27;</span>, <span class="built_in">this</span>.value);</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.value;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="title">set</span>(<span class="params">newValue</span>)</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&#x27;set&#x27;</span>, newValue);</span><br><span class="line">      <span class="comment">// 向全局通知该数据更新</span></span><br><span class="line">      report(<span class="built_in">this</span>.value, newValue);</span><br><span class="line">      <span class="built_in">this</span>.value = newValue;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// reactive代码</span></span><br><span class="line">eventEmitter.on(<span class="string">&#x27;report&#x27;</span>, <span class="function">(<span class="params">oldValue, newValue</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(oldValue, <span class="string">&#x27;===&gt;&#x27;</span>, newValue);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通知给全局</span></span><br><span class="line"><span class="keyword">const</span> report = <span class="function">(<span class="params">oldValue, newValue</span>) =&gt;</span> &#123;</span><br><span class="line">  eventEmitter.emit(<span class="string">&#x27;report&#x27;</span>, oldValue, newValue);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>主要是使用 value 值存储原始类型，使用 get 获取 value 值，使用 set 更新 value 值。值得注意的是，在更新数据以前，set 方法会根据一定的配置，选择是否向全局发送更新事件，相应的一些 computed 的属性会接收到该事件。</p>
-<h3 id="3-Reactions"><a href="#3-Reactions" class="headerlink" title="3.Reactions"></a>3.Reactions</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> render = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">&#x27;console&#x27;</span>).innerText = greet + wdz.fullName;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 动态更新dom内容</span></span><br><span class="line">autorun(render);</span><br></pre></td></tr></table></figure>
-
-<p>当 observable 数据变化后，页面会自动更新 ui。</p>
-<h2 id="三、mobx-实战-实现一个-todoList"><a href="#三、mobx-实战-实现一个-todoList" class="headerlink" title="三、mobx 实战-实现一个 todoList"></a>三、mobx 实战-实现一个 todoList</h2><p>注：由于 create-react-app 创建的项目默认不能使用装饰器语法，所以笔者暴力的 eject 并安装了相应的 babel 配置。</p>
-<p>以下是 todoList 的项目结构：</p>
-<p><img src="6.png" alt="6"></p>
-<p>最终实现效果：</p>
-<p><img src="7.png" alt="7"></p>
-<p>项目地址：<a href="https://github.com/Demian1996/todo/tree/mobx-todo">todolist</a></p>
-<p>当我们使用 mobx 维护状态时，store 不像 redux 那样是全局唯一的，我们可以细粒度地维护一个个数据模型。在中小型的项目中，mobx 的 store 轻便简洁，使用起来很顺滑。</p>
-<p>项目中用到的 mobx 特性：</p>
-<h3 id="1-observable"><a href="#1-observable" class="headerlink" title="1.observable"></a>1.observable</h3><p>主要维护 todolist 的基本状态：待办列表 todolist、新建待办的内容 itemContent 和当前筛选类型 filterType</p>
-<p><img src="8.png" alt="8"></p>
-<h3 id="2-computed"><a href="#2-computed" class="headerlink" title="2.computed"></a>2.computed</h3><p>根据当前筛选器的类型，返回对应的 todoList。</p>
-<p><img src="9.png" alt="9"></p>
-<h3 id="3-reactions"><a href="#3-reactions" class="headerlink" title="3.reactions"></a>3.reactions</h3><p>筛选器状态变化后，响应式地打印出当前筛选器的状态。</p>
-<p><img src="10.png" alt="10"></p>
-<h3 id="4-actions"><a href="#4-actions" class="headerlink" title="4.actions"></a>4.actions</h3><p>点击筛选器后的状态切换和异步事件。这里需要使用 runInAction 包装异步函数，这样才可以完成响应式的更新数据。</p>
-<p><img src="11.png" alt="11"></p>
-<h2 id="四、Mobx-vs-Redux"><a href="#四、Mobx-vs-Redux" class="headerlink" title="四、Mobx vs Redux"></a>四、Mobx vs Redux</h2><p>两者都是优秀的状态管理工具，都可以帮助开发者完成业务开发。所以抛开业务场景谈论工具优劣是无意义的，笔者这里只是简单列出两者的区别。</p>
-<h3 id="修改数据"><a href="#修改数据" class="headerlink" title="修改数据"></a>修改数据</h3><p><img src="12.png" alt="12"></p>
-<h3 id="中间件"><a href="#中间件" class="headerlink" title="中间件"></a>中间件</h3><p><img src="13.png" alt="13"></p>
-<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>笔者只是介绍了 mobx 的冰山一角，其作为一种响应式的状态管理库，在中小型项目中有着高效率的表现。响应式的写法、细粒度的 store 管理都体现了 mobx 的灵活性。</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> React </tag>
+            
+            <tag> Babel </tag>
+            
+            <tag> Mobx </tag>
+            
+            <tag> 装饰器 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>hexo发布文章流程记录</title>
+      <link href="/2018/11/09/hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/"/>
+      <url>/2018/11/09/hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/</url>
+      
+        <content type="html"><![CDATA[<p>新建文章</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new post &quot;title&quot;</span><br></pre></td></tr></table></figure><p>生成静态网页</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure><p>本地预览</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure><p>同步至 github 服务器</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
-        <category>状态管理</category>
+          
+          <category> 其他 </category>
+          
       </categories>
-      <tags>
-        <tag>React</tag>
-        <tag>Mobx</tag>
-      </tags>
-  </entry>
+      
+      
+        <tags>
+            
+            <tag> Hexo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
 </search>
