@@ -12,9 +12,9 @@ direction: ltr
 # 键值对 'Key: url' 将导致在导航菜单中显示到 'url' 的链接，名称为 'Key'。还可以在 languages/*.yml 中为 'Key' 添加翻译。
 nav:
   home: /
+  about: /about/
   articles: /archives/
   tag: /tags/
-  about: /about/
   search: /search/
 
 # 链接到您的社交媒体账户。
