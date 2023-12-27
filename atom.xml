@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>假想国</title>
+  
+  
+  <link href="http://demian1996.github.io/atom.xml" rel="self"/>
+  
+  <link href="http://demian1996.github.io/"/>
+  <updated>2022-08-05T09:20:15.101Z</updated>
+  <id>http://demian1996.github.io/</id>
+  
+  <author>
+    <name>白衣卿相</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【基于Git hooks搭建前端工作流系列】二、使用js实现代码语法检测</title>
+    <link href="http://demian1996.github.io/2021/06/18/%E3%80%90%E5%9F%BA%E4%BA%8EGit%20hooks%E6%90%AD%E5%BB%BA%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%B3%BB%E5%88%97%E3%80%91%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8js%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81%E8%AF%AD%E6%B3%95%E6%A3%80%E6%B5%8B/"/>
+    <id>http://demian1996.github.io/2021/06/18/%E3%80%90%E5%9F%BA%E4%BA%8EGit%20hooks%E6%90%AD%E5%BB%BA%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%B3%BB%E5%88%97%E3%80%91%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8js%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81%E8%AF%AD%E6%B3%95%E6%A3%80%E6%B5%8B/</id>
+    <published>2021-06-18T07:48:42.000Z</published>
+    <updated>2022-08-05T09:20:15.101Z</updated>
+    
+    
+    <summary type="html">【基于Git hooks搭建前端工作流系列】的第二篇文章，主要介绍如何使用js实现git脚本文件，完成代码语法检测功能</summary>
+    
+    
+    
+    <category term="前端" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="工程化" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/%E5%B7%A5%E7%A8%8B%E5%8C%96/"/>
+    
+    
+    <category term="Git" scheme="http://demian1996.github.io/tags/Git/"/>
+    
+    <category term="工程化" scheme="http://demian1996.github.io/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【基于Git hooks搭建前端工作流系列】一、方案选型</title>
+    <link href="http://demian1996.github.io/2021/06/18/%E3%80%90%E5%9F%BA%E4%BA%8EGit%20hooks%E6%90%AD%E5%BB%BA%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%B3%BB%E5%88%97%E3%80%91%E4%B8%80%E3%80%81%E6%96%B9%E6%A1%88%E9%80%89%E5%9E%8B/"/>
+    <id>http://demian1996.github.io/2021/06/18/%E3%80%90%E5%9F%BA%E4%BA%8EGit%20hooks%E6%90%AD%E5%BB%BA%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%B3%BB%E5%88%97%E3%80%91%E4%B8%80%E3%80%81%E6%96%B9%E6%A1%88%E9%80%89%E5%9E%8B/</id>
+    <published>2021-06-18T01:49:18.000Z</published>
+    <updated>2022-08-05T09:20:15.079Z</updated>
+    
+    
+    <summary type="html">【基于Git hooks搭建前端工作流系列】的第一篇文章，主要介绍现在主流的基于Git hooks搭建的前端工作流方案</summary>
+    
+    
+    
+    <category term="前端" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="工程化" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/%E5%B7%A5%E7%A8%8B%E5%8C%96/"/>
+    
+    
+    <category term="Git" scheme="http://demian1996.github.io/tags/Git/"/>
+    
+    <category term="工程化" scheme="http://demian1996.github.io/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Butterfly主题优化首页大图加载效果</title>
+    <link href="http://demian1996.github.io/2021/06/05/Butterfly%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96%E9%A6%96%E9%A1%B5%E5%A4%A7%E5%9B%BE%E5%8A%A0%E8%BD%BD%E6%95%88%E6%9E%9C/"/>
+    <id>http://demian1996.github.io/2021/06/05/Butterfly%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96%E9%A6%96%E9%A1%B5%E5%A4%A7%E5%9B%BE%E5%8A%A0%E8%BD%BD%E6%95%88%E6%9E%9C/</id>
+    <published>2021-06-05T02:38:22.000Z</published>
+    <updated>2022-08-05T09:20:14.927Z</updated>
+    
+    
+    <summary type="html">Butterfly主题的首页大图很炫酷，但是如果图很大，会造成自上而下的加载效果，很不美观。本文主要是基于medium的图片加载方案，实现首页大图的渐进式加载。</summary>
+    
+    
+    
+    <category term="其他" scheme="http://demian1996.github.io/categories/%E5%85%B6%E4%BB%96/"/>
+    
+    
+    <category term="Hexo" scheme="http://demian1996.github.io/tags/Hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>配置项目ts和hook的eslint约束</title>
+    <link href="http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/"/>
+    <id>http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/</id>
+    <published>2020-08-14T01:15:14.000Z</published>
+    <updated>2022-08-05T09:20:15.113Z</updated>
+    
+    
+    <summary type="html">本文主要介绍如何在前端项目中搭配使用 eslint 和腾讯封装的 eslint-config，来对项目中的 typescript 和 react hook 进行语法检测。</summary>
+    
+    
+    
+    <category term="前端" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="工程化" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/%E5%B7%A5%E7%A8%8B%E5%8C%96/"/>
+    
+    
+    <category term="Eslint" scheme="http://demian1996.github.io/tags/Eslint/"/>
+    
+    <category term="Typescript" scheme="http://demian1996.github.io/tags/Typescript/"/>
+    
+    <category term="Alloy" scheme="http://demian1996.github.io/tags/Alloy/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>封装useModal复用公共弹窗组件</title>
+    <link href="http://demian1996.github.io/2020/08/09/%E5%B0%81%E8%A3%85useModal%E5%A4%8D%E7%94%A8%E5%85%AC%E5%85%B1%E5%BC%B9%E7%AA%97%E7%BB%84%E4%BB%B6/"/>
+    <id>http://demian1996.github.io/2020/08/09/%E5%B0%81%E8%A3%85useModal%E5%A4%8D%E7%94%A8%E5%85%AC%E5%85%B1%E5%BC%B9%E7%AA%97%E7%BB%84%E4%BB%B6/</id>
+    <published>2020-08-09T12:00:09.000Z</published>
+    <updated>2022-08-05T09:20:15.111Z</updated>
+    
+    
+    <summary type="html">本文主要介绍如何封装一个自定义的useModal hook，使得项目中各类弹窗组件的使用方式改为命令式的呼起。</summary>
+    
+    
+    
+    <category term="前端" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="设计" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/%E8%AE%BE%E8%AE%A1/"/>
+    
+    
+    <category term="React" scheme="http://demian1996.github.io/tags/React/"/>
+    
+    <category term="组件设计" scheme="http://demian1996.github.io/tags/%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="React Hook" scheme="http://demian1996.github.io/tags/React-Hook/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何在Github Pages上部署create-react-app项目</title>
+    <link href="http://demian1996.github.io/2020/06/17/%E5%A6%82%E4%BD%95%E5%9C%A8Github-Pages%E4%B8%8A%E9%83%A8%E7%BD%B2create-react-app%E9%A1%B9%E7%9B%AE/"/>
+    <id>http://demian1996.github.io/2020/06/17/%E5%A6%82%E4%BD%95%E5%9C%A8Github-Pages%E4%B8%8A%E9%83%A8%E7%BD%B2create-react-app%E9%A1%B9%E7%9B%AE/</id>
+    <published>2020-06-17T12:00:09.000Z</published>
+    <updated>2022-08-05T09:20:15.109Z</updated>
+    
+    
+    <summary type="html">本文主要介绍如何利用Github Pages，简单方便地将自己开发的静态页面部署到线上使用。</summary>
+    
+    
+    
+    <category term="前端" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="工程化" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/%E5%B7%A5%E7%A8%8B%E5%8C%96/"/>
+    
+    
+    <category term="Github" scheme="http://demian1996.github.io/tags/Github/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ramda开发命令行工具生成多语言字典</title>
+    <link href="http://demian1996.github.io/2019/11/29/ramda%E5%BC%80%E5%8F%91%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E7%94%9F%E6%88%90%E5%A4%9A%E8%AF%AD%E8%A8%80%E5%AD%97%E5%85%B8/"/>
+    <id>http://demian1996.github.io/2019/11/29/ramda%E5%BC%80%E5%8F%91%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E7%94%9F%E6%88%90%E5%A4%9A%E8%AF%AD%E8%A8%80%E5%AD%97%E5%85%B8/</id>
+    <published>2019-11-29T08:05:53.000Z</published>
+    <updated>2022-08-05T09:20:15.077Z</updated>
+    
+    
+    <summary type="html">本文主要介绍如何利用 ramda 开发一款本地生成多语言文件的命令行工具。</summary>
+    
+    
+    
+    <category term="前端" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="工具开发" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="Ramda" scheme="http://demian1996.github.io/tags/Ramda/"/>
+    
+    <category term="函数式编程" scheme="http://demian1996.github.io/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+    <category term="命令行工具" scheme="http://demian1996.github.io/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mobx初探</title>
+    <link href="http://demian1996.github.io/2019/04/23/mobx%E5%88%9D%E6%8E%A2/"/>
+    <id>http://demian1996.github.io/2019/04/23/mobx%E5%88%9D%E6%8E%A2/</id>
+    <published>2019-04-22T16:39:08.000Z</published>
+    <updated>2022-08-05T09:20:15.051Z</updated>
+    
+    
+    <summary type="html">本文主要介绍在 Frontend Master 网站上学到的 mobx 的相关特性。</summary>
+    
+    
+    
+    <category term="前端" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="状态管理" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="React" scheme="http://demian1996.github.io/tags/React/"/>
+    
+    <category term="Mobx" scheme="http://demian1996.github.io/tags/Mobx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>React父组件和子组件解耦方案</title>
+    <link href="http://demian1996.github.io/2019/03/24/React%E7%88%B6%E7%BB%84%E4%BB%B6%E5%92%8C%E5%AD%90%E7%BB%84%E4%BB%B6%E8%A7%A3%E8%80%A6%E6%96%B9%E6%A1%88/"/>
+    <id>http://demian1996.github.io/2019/03/24/React%E7%88%B6%E7%BB%84%E4%BB%B6%E5%92%8C%E5%AD%90%E7%BB%84%E4%BB%B6%E8%A7%A3%E8%80%A6%E6%96%B9%E6%A1%88/</id>
+    <published>2019-03-24T14:01:12.000Z</published>
+    <updated>2022-08-05T09:20:15.048Z</updated>
+    
+    
+    <summary type="html">本文主要介绍在 React 中的几种将父组件和子组件解耦的方案。</summary>
+    
+    
+    
+    <category term="前端" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="设计" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/%E8%AE%BE%E8%AE%A1/"/>
+    
+    
+    <category term="React" scheme="http://demian1996.github.io/tags/React/"/>
+    
+    <category term="组件设计" scheme="http://demian1996.github.io/tags/%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>react中减少render臃肿的方法</title>
+    <link href="http://demian1996.github.io/2019/03/07/react%E4%B8%AD%E5%87%8F%E5%B0%91render%E8%87%83%E8%82%BF%E7%9A%84%E6%96%B9%E6%B3%95/"/>
+    <id>http://demian1996.github.io/2019/03/07/react%E4%B8%AD%E5%87%8F%E5%B0%91render%E8%87%83%E8%82%BF%E7%9A%84%E6%96%B9%E6%B3%95/</id>
+    <published>2019-03-07T15:25:07.000Z</published>
+    <updated>2022-08-05T09:20:15.078Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;最近看了mobx的相关知识，对computed属性十分喜欢。&lt;/p&gt;
+&lt;p&gt;想起在日常的项目开发中，react经常需要在render函数的开始部分进行一些props属性的计算，再将计算值用于渲染。一般会有以下画面：&lt;/p&gt;
+&lt;figure class=&quot;highlight js&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Component&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;render&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;&lt;/span&gt;)&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; &amp;#123; firstName, secondName &amp;#125; = &lt;span class=&quot;built_in&quot;&gt;this&lt;/span&gt;.props;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;const&lt;/span&gt; fullName = firstName + secondName;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;xml&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&amp;#123;fullName&amp;#125;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
+    
+    
+    
+    <category term="前端" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="设计" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/%E8%AE%BE%E8%AE%A1/"/>
+    
+    
+    <category term="React" scheme="http://demian1996.github.io/tags/React/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Create-react-app中使用装饰器语法</title>
+    <link href="http://demian1996.github.io/2019/03/01/Create-react-app%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%A3%85%E9%A5%B0%E5%99%A8%E8%AF%AD%E6%B3%95/"/>
+    <id>http://demian1996.github.io/2019/03/01/Create-react-app%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%A3%85%E9%A5%B0%E5%99%A8%E8%AF%AD%E6%B3%95/</id>
+    <published>2019-02-28T18:29:45.000Z</published>
+    <updated>2022-08-05T09:20:15.043Z</updated>
+    
+    
+    <summary type="html">本文主要介绍了如何在cra项目中拓展使用装饰器语法，从而支持mobx的装饰器。</summary>
+    
+    
+    
+    <category term="前端" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="其他" scheme="http://demian1996.github.io/categories/%E5%89%8D%E7%AB%AF/%E5%85%B6%E4%BB%96/"/>
+    
+    
+    <category term="React" scheme="http://demian1996.github.io/tags/React/"/>
+    
+    <category term="Babel" scheme="http://demian1996.github.io/tags/Babel/"/>
+    
+    <category term="Mobx" scheme="http://demian1996.github.io/tags/Mobx/"/>
+    
+    <category term="装饰器" scheme="http://demian1996.github.io/tags/%E8%A3%85%E9%A5%B0%E5%99%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hexo发布文章流程记录</title>
+    <link href="http://demian1996.github.io/2018/11/09/hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/"/>
+    <id>http://demian1996.github.io/2018/11/09/hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0%E6%B5%81%E7%A8%8B%E8%AE%B0%E5%BD%95/</id>
+    <published>2018-11-09T02:19:27.000Z</published>
+    <updated>2022-08-05T09:20:15.049Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    <category term="其他" scheme="http://demian1996.github.io/categories/%E5%85%B6%E4%BB%96/"/>
+    
+    
+    <category term="Hexo" scheme="http://demian1996.github.io/tags/Hexo/"/>
+    
+  </entry>
+  
+</feed>

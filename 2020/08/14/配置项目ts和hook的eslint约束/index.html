@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="本文主要介绍如何在前端项目中搭配使用 eslint 和腾讯封装的 eslint-config，来对项目中的 typescript 和 react hook 进行语法检测。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置项目ts和hook的eslint约束">
+<meta property="og:url" content="http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/index.html">
+<meta property="og:site_name" content="假想国">
+<meta property="og:description" content="本文主要介绍如何在前端项目中搭配使用 eslint 和腾讯封装的 eslint-config，来对项目中的 typescript 和 react hook 进行语法检测。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/1.png">
+<meta property="og:image" content="http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/2.png">
+<meta property="article:published_time" content="2020-08-14T01:15:14.000Z">
+<meta property="article:modified_time" content="2022-08-05T09:20:15.113Z">
+<meta property="article:author" content="白衣卿相">
+<meta property="article:tag" content="Eslint">
+<meta property="article:tag" content="Typescript">
+<meta property="article:tag" content="Alloy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/common/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>配置项目ts和hook的eslint约束</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="假想国" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2021/06/05/Butterfly%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96%E9%A6%96%E9%A1%B5%E5%A4%A7%E5%9B%BE%E5%8A%A0%E8%BD%BD%E6%95%88%E6%9E%9C/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/08/09/%E5%B0%81%E8%A3%85useModal%E5%A4%8D%E7%94%A8%E5%85%AC%E5%85%B1%E5%BC%B9%E7%AA%97%E7%BB%84%E4%BB%B6/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&text=配置项目ts和hook的eslint约束"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&title=配置项目ts和hook的eslint约束"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&is_video=false&description=配置项目ts和hook的eslint约束"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=配置项目ts和hook的eslint约束&body=Check out this article: http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&title=配置项目ts和hook的eslint约束"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&title=配置项目ts和hook的eslint约束"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&title=配置项目ts和hook的eslint约束"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&title=配置项目ts和hook的eslint约束"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&name=配置项目ts和hook的eslint约束&description=&lt;h2 id=&#34;背景&#34;&gt;&lt;a href=&#34;#背景&#34; class=&#34;headerlink&#34; title=&#34;背景&#34;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。&lt;/p&gt;
+&lt;p&gt;鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见&lt;a href=&#34;https://github.com/AlloyTeam/eslint-config-alloy&#34;&gt;eslint-config-alloy&lt;/a&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&t=配置项目ts和hook的eslint约束"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-%E6%9B%B4%E6%96%B0-Vscode-%E6%8F%92%E4%BB%B6-Eslint"><span class="toc-number">2.</span> <span class="toc-text">第一步：安装&#x2F;更新 Vscode 插件 Eslint</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-Eslint-config-alloy"><span class="toc-number">3.</span> <span class="toc-text">第二步：安装 Eslint-config-alloy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-hook-%E8%A7%84%E8%8C%83"><span class="toc-number">4.</span> <span class="toc-text">第三步：安装 hook 规范</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        配置项目ts和hook的eslint约束
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">白衣卿相</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-08-14T01:15:14.000Z" class="dt-published" itemprop="datePublished">2020-08-14</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> › <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/%E5%B7%A5%E7%A8%8B%E5%8C%96/">工程化</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Alloy/" rel="tag">Alloy</a>, <a class="p-category" href="/tags/Eslint/" rel="tag">Eslint</a>, <a class="p-category" href="/tags/Typescript/" rel="tag">Typescript</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。</p>
+<p>鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见<a target="_blank" rel="noopener" href="https://github.com/AlloyTeam/eslint-config-alloy">eslint-config-alloy</a></p>
+<span id="more"></span>
+
+<h2 id="第一步：安装-更新-Vscode-插件-Eslint"><a href="#第一步：安装-更新-Vscode-插件-Eslint" class="headerlink" title="第一步：安装/更新 Vscode 插件 Eslint"></a>第一步：安装/更新 Vscode 插件 Eslint</h2><p>vscode 中更新 Eslint 插件到最新版，保证对 typescript-eslint 的支持。</p>
+<p><img src="1.png" alt="1"></p>
+<h2 id="第二步：安装-Eslint-config-alloy"><a href="#第二步：安装-Eslint-config-alloy" class="headerlink" title="第二步：安装 Eslint-config-alloy"></a>第二步：安装 Eslint-config-alloy</h2><p>AlloyTeam ESLint：是一套先进的适用于 React/Vue/Typescript 项目的 ESLint 配置规范，而且也是配置个性化 ESLint 规则的最佳参考。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev eslint typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-config-alloy</span><br></pre></td></tr></table></figure>
+
+<p>安装完毕后，在.eslintrc.js 文件中新增配置如下:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="attr">extends</span>: [<span class="string">&#x27;alloy&#x27;</span>, <span class="string">&#x27;alloy/react&#x27;</span>, <span class="string">&#x27;alloy/typescript&#x27;</span>],</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>此时项目已经支持对 ts 的 eslint 限制， 可以通过新建一个 index.tsx，在其中新建变量 var，此时 eslint 会进行报错：</p>
+<p><img src="2.png" alt="2"></p>
+<blockquote>
+<p>ps: 如果装完后，vscode 没有成功给出提示。先打开 vscode 命令行，在“终端”中选择 Eslint，查看具体错误。如果是报找不到包的错误，很可能是之前安装过上面的某个包，版本和现在安装的其他包不兼容。可以试试先将上面的所有包全部 uninstall，再重新 install。</p>
+</blockquote>
+<h2 id="第三步：安装-hook-规范"><a href="#第三步：安装-hook-规范" class="headerlink" title="第三步：安装 hook 规范"></a>第三步：安装 hook 规范</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev eslint-plugin-react-hooks</span><br></pre></td></tr></table></figure>
+
+<p>安装完毕后，在.eslintrc.js 文件中新增</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extends</span>: [</span><br><span class="line">    ...,</span><br><span class="line">    <span class="string">&#x27;plugin:react-hooks/recommended&#x27;</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>这里我们使用的是 plugin 提供的推荐配置，想要自定义配置可自行参照官方文档，在 rules 中进行配置。</p>
+
+  </div>
+</article>
+
+<!-- 下面添加 Gitalk 部分 -->
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-%E6%9B%B4%E6%96%B0-Vscode-%E6%8F%92%E4%BB%B6-Eslint"><span class="toc-number">2.</span> <span class="toc-text">第一步：安装&#x2F;更新 Vscode 插件 Eslint</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-Eslint-config-alloy"><span class="toc-number">3.</span> <span class="toc-text">第二步：安装 Eslint-config-alloy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-hook-%E8%A7%84%E8%8C%83"><span class="toc-number">4.</span> <span class="toc-text">第三步：安装 hook 规范</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&text=配置项目ts和hook的eslint约束"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&title=配置项目ts和hook的eslint约束"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&is_video=false&description=配置项目ts和hook的eslint约束"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=配置项目ts和hook的eslint约束&body=Check out this article: http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&title=配置项目ts和hook的eslint约束"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&title=配置项目ts和hook的eslint约束"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&title=配置项目ts和hook的eslint约束"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&title=配置项目ts和hook的eslint约束"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&name=配置项目ts和hook的eslint约束&description=&lt;h2 id=&#34;背景&#34;&gt;&lt;a href=&#34;#背景&#34; class=&#34;headerlink&#34; title=&#34;背景&#34;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;teacher-web 端之前用的是 tslint，考虑到 typescript 团队已经停止维护 tslint，且 Eslint 规范更多，所以将教师空间中的 ts 代码检查整合到 Eslint 中。整理此份文档，方便后续参照。&lt;/p&gt;
+&lt;p&gt;鉴于项目中普遍用的均为 alloyTeam 的配置规范，所以最终决定 js 和 ts 文件的 eslint 配置均统一使用 alloyTeam 的配置规范。详细地址见&lt;a href=&#34;https://github.com/AlloyTeam/eslint-config-alloy&#34;&gt;eslint-config-alloy&lt;/a&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://demian1996.github.io/2020/08/14/%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEts%E5%92%8Chook%E7%9A%84eslint%E7%BA%A6%E6%9D%9F/&t=配置项目ts和hook的eslint约束"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2018-2023
+    白衣卿相
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?b8cfb9edb93ef89e5dd61b1282dba367";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
