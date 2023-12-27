@@ -26,7 +26,7 @@ nav:
 social_links:
   -
     icon: github
-    link: categories
+    link: https://github.com/Demian1996
   -
     icon: mail
     link: mailto:1303465909@qq.com
@@ -209,8 +209,8 @@ gravatar:
 # 从CDN加载库和样式而不是依赖本地文件
 cdn:
   enable: true
-  jquery: https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js
-  clipboard: https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js
-  font_awesome: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css
-  justified_gallery_css: https://cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.8.1/css/justifiedGallery.min.css
-  justified_gallery_js: https://cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js
+  jquery: https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js
+  clipboard: https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js
+  font_awesome: https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css
+  justified_gallery_css: https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css
+  justified_gallery_js: https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js
