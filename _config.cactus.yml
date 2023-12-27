@@ -1,128 +1,110 @@
 ##############################################################################
-# Content
+# 内容
 ##############################################################################
 
-# Link to a page that gives an overview of all your projects.
-# This can be an external link (e.g., to you GitHub profile) or to another
-# page within your website.
-projects_url: http://github.com/probberechts
+# 链接到显示所有项目概览的页面。
+# 这可以是外部链接（例如，指向您的GitHub个人资料）或指向您网站内的另一页。
+projects_url: https://github.com/Demian1996
 
-# Set the page direction to RTL or LTR. default is LTR. (if you set it 'rtl', the 'vazir' font will be loaded.)
+# 设置页面方向为RTL或LTR。默认为LTR。 （如果设置为'rtl'，将加载'vazir'字体。）
 direction: ltr
-# Configure the navigation menu.
-# A pair 'Key: url' will result in a link to 'url' with the name 'Key' in the
-# navigation menu. Optionally, you can add translations for the 'Key' in
-# languages/*.yml
+# 配置导航菜单。
+# 键值对 'Key: url' 将导致在导航菜单中显示到 'url' 的链接，名称为 'Key'。还可以在 languages/*.yml 中为 'Key' 添加翻译。
 nav:
   home: /
-  about: /about/
   articles: /archives/
-  projects: http://github.com/probberechts
+  tag: /tags/
+  about: /about/
 
 
-# Links to your social media accounts.
-# The 'icon' keys should correspond to Fontawesome icon names
-# (see https://fontawesome.com/icons?d=gallery&s=brands);
-# only 'mail' is an exception.
-# You can optionally add a 'label' key to set the title attribute on the link. 
-# 'icon' value will be used as title when 'label' is missing.
+# 链接到您的社交媒体账户。
+# 'icon' 键应与Fontawesome图标名称对应
+# （请参阅 https://fontawesome.com/icons?d=gallery&s=brands）；
+# 仅'mail'是一个例外。
+# 您还可以选择添加 'label' 键以设置链接上的标题属性。
+# 'label' 丢失时，将使用 'icon' 值作为标题。
 social_links:
   -
     icon: github
-    link: http://github.com/probberechts/cactus-dark
-  -
-    icon: twitter
-    link: /
-  -
-    icon: facebook
-    link: /
+    link: categories
   -
     icon: mail
-    link: mailto:name@email.com
-  -
-    icon: mastodon
-    label: mastodon.social
-    link: https://mastodon.social/@alice
-  -
-    icon: mastodon
-    label: fosstodon.org
-    link: https://fosstodon.org/@alice
+    link: mailto:1303465909@qq.com
 
-# Customize the overview with displaying a tagcloud on the index page.
-# Options: https://hexo.io/docs/helpers.html#tagcloud
+# 在主页上显示标签云的概览。
+# 选项：https://hexo.io/docs/helpers.html#tagcloud
 tags_overview: false
 
-# Customize the overview with the most recent blog posts on the index page.
-# Options:
-#   - show_all_posts: whether to show all available posts.
-#   - post_count: whether to show only the x most recent posts.
-#   - sort_updated: sort posts by last modification date instead of creation date.
+# 在主页上显示最新博客文章的概览。
+# 选项：
+#   - show_all_posts: 是否显示所有可用的帖子。
+#   - post_count: 是否只显示 x 最近的帖子。
+#   - sort_updated: 按最后修改日期而不是创建日期排序帖子。
 posts_overview:
-  show_all_posts: false
+  show_all_posts: true
   post_count: 5
   sort_updated: false
 
-# Customize the archive view.
-# Options:
-#   - sort_updated: sort posts by last modification date instead of creation date.
-# Note: this does not work together with pagination, since the pagination
-# plugin will sort pages by date of creation.
+# 自定义存档视图。
+# 选项：
+#   - sort_updated: 按最后修改日期而不是创建日期排序帖子。
+# 注意：这与分页一起使用时不起作用，因为分页插件将按创建日期对页面进行排序。
 archive:
   sort_updated: false
 
-# Customize the article view.
-# Options:
-#   - show_updated: show the last modification date.
+# 自定义文章视图。
+# 选项：
+#   - show_updated: 显示最后修改日期。
 post:
   show_updated: false
 
-# Customize the copyright years
-# Note: if start_year/end_year not provided, will use current year.
+# 自定义版权年份
+# 注意：如果未提供start_year/end_year，将使用当前年份。
 copyright:
-  start_year: 2016
+  start_year: 2018
   end_year:
 
-# Customize the 404 page
-# Options:
-#   - enabled: whether to enable the 404 page (404.html).
+# 自定义404页面
+# 选项：
+#   - enabled: 是否启用404页面（404.html）。
 error_404:
   enabled: true
   title: "404 Page Not Found"
-  description: "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."
+  description: "您要查找的页面可能已被删除，更改了其名称，或者暂时不可用。"
 
 
 ##############################################################################
-# Look and Feel
+# 外观
 ##############################################################################
 
-# Customize the logo (i.e., the cactus) in the header.
-# Options:
-#   - enabled: whether to show (true) or hide (false) the logo.
-#   - width: width of the logo in pixel units
-#   - height: height of the logo in pixel units
-#   - url: where the logo can be found
-#   - gravatar: whether to use your Gravatar as the logo
-#   - grayout: whether to enable a hover effect on the logo
+# 自定义标题中的标志（即cactus）。
+# 选项：
+#   - enabled: 是否显示（true）或隐藏（false）标志。
+#   - width: 标志的宽度（以像素为单位）。
+#   - height: 标志的高度（以像素为单位）。
+#   - url: 标志的位置。
+#   - gravatar: 是否使用您的Gravatar作为标志。
+#   - grayout: 是否在标志上启用悬停效果。
 logo:
-  enabled: true
+  enabled: false
   width: 50
   height: 50
-  url: /images/logo.png
+  url: /common/avatar1.jpeg
   gravatar: false
-  grayout: true
+  grayout: false
 
-# Customize the favicons.
-# Cactus supports a limited set of the three most important icons:
-#   - desktop: The classic favion.ico file.
-#   - android: A 192x192 PNG file.
-#   - apple:  A 180x180 PNG file.
-# These can be generated with http://realfavicongenerator.net/
-# Options:
-#   - url: where the icon can be found
-#   - gravatar: whether to create a favicon from your Gravatar
+# 自定义favicon。
+# cactus支持三个最重要的图标的有限集：
+#   - desktop: 经典的favion.ico文件。
+#   - android: 一个192x192的PNG文件。
+#   - apple:  一个180x180的PNG文件。
+# 这些可以使用 http://realfavicongenerator.net/ 生成。
+# 选项：
+#   - url: 图标的位置。
+#   - gravatar: 是否从您的Gravatar创建favicon。
 favicon:
   desktop:
-    url: /images/favicon.ico
+    url: /common/favicon.ico
     gravatar: false
   android:
     url: /images/favicon-192x192.png
@@ -131,27 +113,27 @@ favicon:
     url: /images/apple-touch-icon.png
     gravatar: false
 
-# The color scheme that should be used to highlight codeblocks.
-# See source/css/_highlight for a list of all available color schemes.
+# 应该用于突出显示代码块的颜色方案。
+# 请参阅source/css/_highlight以查看所有可用的颜色方案。
 # highlight: rainbow
 
-# Set the color scheme.
-# Available color schemes are 'dark', 'light', 'classic' and 'white'.
-# Alternatively, add your own custom color scheme to source/css/_colors.
+# 设置颜色方案。
+# 可用的颜色方案有'dark'，'light'，'classic'和'white'。
+# 或者，将您自己的自定义颜色方案添加到source/css/_colors中。
 colorscheme: classic
 
-# Maximal width of the page in rem units.
-page_width: 48
+# 页面的最大宽度，以rem为单位。
+page_width: 60
 
 
 ##############################################################################
-# Miscellaneous
+# 杂项
 ##############################################################################
 
-# Enable or disable the RSS feed.
+# 启用或禁用RSS订阅。
 rss: false
 
-# Turn your web pages into graph objects (see http://ogp.me).
+# 将您的网页转换为图形对象（请参见http://ogp.me）。
 open_graph:
   fb_app_id:
   fb_admins:
@@ -160,19 +142,34 @@ open_graph:
 
 
 ##############################################################################
-# Plugins
+# 插件
 ##############################################################################
 
-# Enable MathJax support for Latex
+# 启用对Latex的MathJax支持
 mathjax:
   enabled: false
 
-# Fill in your Disqus Comments Shortname to enable Disqus comments.
+# 填写Disqus评论的Shortname以启用Disqus评论。
 disqus:
   enabled: false
   shortname: cactus-1
 
-# Fill in your Utterances data to enable Utterances comments
+# gitalk
+# https://github.com/gitalk/gitalk
+gitalk:
+  client_id: '2f0bc1a2ca8696aee993'
+  client_secret: '07f2f355ff46f318cbf507d18a3579dd450b33ae'
+  repo: demian1996.github.io
+  owner: demian1996
+  admin: demian1996
+  language: zh-CN # en, zh-CN, zh-TW, es-ES, fr, ru
+  perPage: 10 # Pagination size, with maximum 100.
+  distractionFreeMode: false # Facebook-like distraction free mode.
+  pagerDirection: last # Comment sorting direction, available values are last and first.
+  createIssueManually: false # Gitalk will create a corresponding github issue for your every single page automatically
+  option:
+
+# 填写Utterances数据以启用Utterances评论
 utterances:
   enabled: false
   repo: owner/githubrepo
@@ -180,36 +177,36 @@ utterances:
   label: Comment
   theme: github-dark
 
-# Fill in your Google Analytics tracking ID to enable Google Analytics.
+# 填写Google Analytics跟踪ID以启用Google Analytics。
 google_analytics:
   enabled: false
   id: UA-86660611-1
 
-# Fill in your Baidu Analytics tracking ID to enable Baidu Analytics.
+# 填写Baidu Analytics跟踪ID以启用Baidu Analytics。
 baidu_analytics:
-  enabled: false
-  id: 2e6da3c375c8a87f5b664cea6d4cb29c
+  enabled: true
+  id: b8cfb9edb93ef89e5dd61b1282dba367
 
-# Fill in your Cloudflare Analytics tracking ID to enable Cloudflare Analytics.
+# 填写Cloudflare Analytics跟踪ID以启用Cloudflare Analytics。
 cloudflare_analytics:
   enabled: false
   id: 0dabb6e21848405483a237e6a7b6ed04
 
-# Fill in your Umami Analytics tracking ID to enable Umami Analytics.
+# 填写Umami Analytics跟踪ID以启用Umami Analytics。
 umami_analytics:
   enabled: false
   id: e77e68be-f6e4-4br3-9365-2b76b57cd571
   host: https://analytics.domain.com
   script_name: umami.js
 
-# Fill in you Gravatar email or hash if you want to use your gravatar as the
-# logo and/or favicons of you website.
-# To generate hash: `$ echo -n "name@email.com" | md5`.
+# 如果要使用您的Gravatar作为
+# 网站的标志和/或favicon，请填写您的Gravatar电子邮件或哈希值。
+# 生成哈希：`$ echo -n "name@email.com" | md5`。
 gravatar:
   email: name@email.com
   hash: d41d8cd98f00b204e9800998ecf8427e
 
-# loads libraries and styles from CDN instead or relying on local files
+# 从CDN加载库和样式而不是依赖本地文件
 cdn:
   enable: true
   jquery: https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js
