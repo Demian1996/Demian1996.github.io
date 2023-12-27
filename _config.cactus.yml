@@ -15,7 +15,7 @@ nav:
   articles: /archives/
   tag: /tags/
   about: /about/
-
+  search: /search/
 
 # 链接到您的社交媒体账户。
 # 'icon' 键应与Fontawesome图标名称对应
@@ -41,7 +41,7 @@ tags_overview: false
 #   - post_count: 是否只显示 x 最近的帖子。
 #   - sort_updated: 按最后修改日期而不是创建日期排序帖子。
 posts_overview:
-  show_all_posts: true
+  show_all_posts: false
   post_count: 5
   sort_updated: false
 
