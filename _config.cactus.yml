@@ -120,7 +120,7 @@ favicon:
 # 设置颜色方案。
 # 可用的颜色方案有'dark'，'light'，'classic'和'white'。
 # 或者，将您自己的自定义颜色方案添加到source/css/_colors中。
-colorscheme: classic
+colorscheme: white
 
 # 页面的最大宽度，以rem为单位。
 page_width: 60
