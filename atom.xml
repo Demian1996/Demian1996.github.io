@@ -6,7 +6,7 @@
   <link href="http://demian1996.github.io/atom.xml" rel="self"/>
   
   <link href="http://demian1996.github.io/"/>
-  <updated>2023-12-30T07:17:52.957Z</updated>
+  <updated>2023-12-30T07:31:42.226Z</updated>
   <id>http://demian1996.github.io/</id>
   
   <author>
@@ -21,19 +21,17 @@
     <link href="http://demian1996.github.io/2023/12/30/%E7%AE%80%E5%8C%96B%E7%AB%99UI-%E8%8A%82%E7%BA%A6%E7%B2%BE%E5%8A%9B/"/>
     <id>http://demian1996.github.io/2023/12/30/%E7%AE%80%E5%8C%96B%E7%AB%99UI-%E8%8A%82%E7%BA%A6%E7%B2%BE%E5%8A%9B/</id>
     <published>2023-12-30T07:13:46.000Z</published>
-    <updated>2023-12-30T07:17:52.957Z</updated>
+    <updated>2023-12-30T07:31:42.226Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html"></summary>
-        
-      
+    <summary type="html">利用stylish插件，简化B站UI，减少注意力浪费</summary>
     
     
     
+    <category term="其他" scheme="http://demian1996.github.io/categories/%E5%85%B6%E4%BB%96/"/>
+    
+    
+    <category term="stylish" scheme="http://demian1996.github.io/tags/stylish/"/>
     
   </entry>
   
