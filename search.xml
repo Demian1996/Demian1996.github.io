@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>2024年flag</title>
+      <link href="/2024/01/03/2024%E5%B9%B4flag/"/>
+      <url>/2024/01/03/2024%E5%B9%B4flag/</url>
+      
+        <content type="html"><![CDATA[<p>又到了新年年初，是时候立一下新年 flag 了。虽然 flag 不一定能完成，但是有个方向总归是好的，也可以作为锚点，在年末总结的时候回顾。</p><h2 id="flag-清单"><a href="#flag-清单" class="headerlink" title="flag 清单"></a>flag 清单</h2><ul><li>根据是否进面，二选一<ul><li>考上公务员</li><li>找到一份合适的工作</li></ul></li><li>通过 OCP 考试</li><li>体重达到 72kg</li><li>体检 2 次</li><li>学习 rust，了解前端工具链底层性能优化</li><li>学习 next.js，了解全栈开发</li><li>学习 ar、vr 开发</li><li>学习 aigc</li><li>常态化每日计划和月度计划</li><li>常态化每日复盘</li><li>读至少 12 本文学书</li><li>读至少 12 本其他书</li><li>写至少 12 篇 csdn 博客</li><li>买 nas，改善音乐和影视系统</li><li>买 vision pro，了解 mr 相关应用开发和使用场景</li><li>买大疆 pocket</li><li>国外旅游一次 or 出省旅游两次</li><li>学会口琴吹奏《送别》《米店》《刻在我心底的名字》</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 其他 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 年度计划 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>简化B站UI,节约精力</title>
       <link href="/2023/12/30/%E7%AE%80%E5%8C%96B%E7%AB%99UI-%E8%8A%82%E7%BA%A6%E7%B2%BE%E5%8A%9B/"/>
       <url>/2023/12/30/%E7%AE%80%E5%8C%96B%E7%AB%99UI-%E8%8A%82%E7%BA%A6%E7%B2%BE%E5%8A%9B/</url>
@@ -190,9 +215,9 @@
             
             <tag> React </tag>
             
-            <tag> React Hook </tag>
-            
             <tag> 组件设计 </tag>
+            
+            <tag> React Hook </tag>
             
         </tags>
       
